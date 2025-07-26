@@ -338,7 +338,7 @@ public class StartActivityYeni extends BaseActivity {
             adManager.incrementCounter(CounterManager.CounterType.ACTIVITY);
 
             // Adım 2: Sayaç 5'in katı mı diye kontrol et.
-            if (adManager.shouldShowEveryNCount(CounterManager.CounterType.ACTIVITY, 3)) {
+            if (adManager.shouldShowEveryNCount(CounterManager.CounterType.ACTIVITY, 8)) {
 
                 // Adım 3a: Evet, 5'in katı. Önce reklamı göster (başında yükleme ekranı ile).
                 adManager.showInterstitialAdWithProgress(this, "paired_devices_click", () -> {
@@ -374,7 +374,7 @@ public class StartActivityYeni extends BaseActivity {
                 } else {
                     requestRequiredPermissions();
                 }*/
-                if (adManager.shouldShowEveryNCount(CounterManager.CounterType.ACTIVITY, 3)) {
+                if (adManager.shouldShowEveryNCount(CounterManager.CounterType.ACTIVITY, 8)) {
 
                     // Adım 3a: Evet, 5'in katı. Önce reklamı göster (başında yükleme ekranı ile).
                     adManager.showInterstitialAdWithProgress(StartActivityYeni.this, "volume_card_click", () -> {

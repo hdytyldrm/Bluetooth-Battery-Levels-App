@@ -204,23 +204,16 @@ public class GenericBluetoothDetector extends BaseDetectionStrategy {
         public void onServiceDisconnected(int profile) {}
     };
 
-    private void getBatteryLevelForDevice(BluetoothDevice device) {
-        if (device == null) return;
 
-        try {
-            Method method = device.getClass().getMethod("getBatteryLevel");
-            Integer batteryLevel = (Integer) method.invoke(device);
-            if (batteryLevel != null && batteryLevel != -1) {
-                updateBatteryLevel(device, batteryLevel + "%");
-                return;
-            }
-        } catch (Exception e) {
-            Log.w(TAG, "Standard getBatteryLevel() failed, waiting for broadcast. " + e.getMessage());
-        }
-        // Eğer reflection ile alınamazsa, "Connected" diye bilgi gönder.
-        // Zaten receiver'ımız BATTERY_LEVEL_CHANGED olayını yakalayıp güncelleyecek.
-        updateBatteryLevel(device, "Connected");
-    }
+   private void getBatteryLevelForDevice(BluetoothDevice device) {
+       if (device == null) return;
+
+       // Reflection ile pil seviyesi alma denemesini TAMAMEN KALDIRDIK.
+       // Artık sadece "android.bluetooth.device.action.BATTERY_LEVEL_CHANGED"
+       // broadcast'ini bekleyeceğiz. Cihaz bağlandığında bu yayın gelmezse,
+       // kullanıcıya en azından "Bağlandı" bilgisini gösterelim.
+       updateBatteryLevel(device, "Bağlandı");
+   }
 
     private void updateBatteryLevel(BluetoothDevice device, String batteryLevel) {
         String deviceName = getDeviceName(device);
