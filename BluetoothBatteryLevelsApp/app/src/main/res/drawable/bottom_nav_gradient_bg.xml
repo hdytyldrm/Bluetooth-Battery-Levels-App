@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Glass effect background -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="90"
+                android:startColor="#F0F4FF"
+                android:centerColor="#FFFFFF"
+                android:endColor="#E8F0FF" />
+            <corners
+                android:topLeftRadius="24dp"
+                android:topRightRadius="24dp" />
+        </shape>
+    </item>
+    <!-- Subtle border -->
+    <item android:top="0dp">
+        <shape android:shape="rectangle">
+            <stroke
+                android:width="1dp"
+                android:color="#E0E7FF" />
+            <corners
+                android:topLeftRadius="24dp"
+                android:topRightRadius="24dp" />
+            <solid android:color="@android:color/transparent" />
+        </shape>
+    </item>
+</layer-list>

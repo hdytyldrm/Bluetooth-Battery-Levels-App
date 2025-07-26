@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_gradient">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:padding="0dp">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="24dp"
+                android:gravity="center_horizontal">
+
+                <!-- Cihaz İsmi -->
+                <TextView
+                    android:id="@+id/deviceTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No Device Connected"
+                    android:textColor="#FFF"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/bold_roboto"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="16dp"/>
+
+                <!-- AirPods Görseli -->
+                <ImageView
+                    android:id="@+id/airpodsImage"
+                    android:layout_width="160dp"
+                    android:layout_height="120dp"
+                    android:src="@drawable/ic_airpods_case"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:layout_marginBottom="12dp"/>
+
+                <!-- Pil Göstergesi Kartı (Cihaz bağlı olduğunda gösterilir) -->
+                <LinearLayout
+                    android:id="@+id/batteryCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_battery_card"
+                    android:gravity="center"
+                    android:padding="20dp"
+                    android:layout_marginBottom="18dp"
+                    android:elevation="4dp"
+                    android:clipToOutline="true"
+                    android:layout_gravity="center_horizontal">
+
+                    <!-- BAĞLANTI DURUMU MESAJI (Cihaz bağlı değilken gösterilir) -->
+                    <LinearLayout
+                        android:id="@+id/noConnectionSection"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:visibility="visible">
+
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:src="@drawable/ic_bluetooth_disabled"
+                            app:tint="#FF6B6B"
+                            android:layout_marginEnd="12dp"/>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="No Device Connected"
+                                android:textColor="#FFFFFF"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:fontFamily="@font/bold_roboto"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Connect your headphones to view battery levels"
+                                android:textColor="#FFFFFF"
+                                android:textSize="14sp"
+                                android:layout_marginTop="4dp"
+                                android:alpha="0.8"/>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- BATARYA SEVİYELERİ (Cihaz bağlı olduğunda gösterilir) -->
+                    <LinearLayout
+                        android:id="@+id/batteryLevelsSection"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:visibility="gone">
+
+                        <!-- Sol Kulaklık -->
+                        <LinearLayout
+                            android:id="@+id/leftEarbudSection"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:id="@+id/leftBatteryIcon"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:rotation="90"
+                                android:src="@drawable/ic_battery_charging"
+                                app:tint="#FFFFFF"/>
+
+                            <TextView
+                                android:id="@+id/leftBatteryText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:text="L --"
+                                android:textColor="#FFFFFF"
+                                android:textSize="17sp"
+                                android:textStyle="bold"
+                                android:gravity="center"
+                                android:fontFamily="@font/bold_roboto"/>
+                        </LinearLayout>
+
+                        <!-- Sağ Kulaklık -->
+                        <LinearLayout
+                            android:id="@+id/rightEarbudSection"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:id="@+id/rightBatteryIcon"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:rotation="90"
+                                android:src="@drawable/ic_battery_charging"
+                                app:tint="#FFFFFF"/>
+
+                            <TextView
+                                android:id="@+id/rightBatteryText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:text="R --"
+                                android:textColor="#FFFFFF"
+                                android:textSize="17sp"
+                                android:textStyle="bold"
+                                android:gravity="center"
+                                android:fontFamily="@font/bold_roboto"/>
+                        </LinearLayout>
+
+                        <!-- Kutu (Case) -->
+                        <LinearLayout
+                            android:id="@+id/caseSection"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:gravity="center">
+
+                            <!-- ÜST: Battery charging ikonu -->
+                            <ImageView
+                                android:id="@+id/caseBatteryIcon"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:rotation="90"
+                                android:src="@drawable/ic_battery_charging"
+                                app:tint="#FF9900"/>
+
+                            <!-- ALT: Case ikonu + yüzde yan yana -->
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical">
+
+                                <ImageView
+                                    android:layout_width="16dp"
+                                    android:layout_height="16dp"
+                                    android:src="@drawable/ic_airpods_case"
+                                    app:tint="#FFFFFF"
+                                    android:layout_marginEnd="4dp"/>
+
+                                <TextView
+                                    android:id="@+id/caseBatteryText"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="--"
+                                    android:textColor="#FFFFFF"
+                                    android:textSize="17sp"
+                                    android:textStyle="bold"
+                                    android:fontFamily="@font/bold_roboto"/>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+                <!-- Bağlantı Uyarı Kartı (Cihaz bağlı olmadığında gösterilir) -->
+                <LinearLayout
+                    android:id="@+id/notificationSettingsCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_card"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingStart="24dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:layout_marginBottom="18dp"
+                    android:elevation="2dp"
+                    android:clipToOutline="true">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Battery Notifications"
+                            android:textColor="#FFFFFF"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/bold_roboto"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Show battery levels in status bar"
+                            android:textColor="#FFFFFF"
+                            android:textSize="14sp"
+                            android:layout_marginTop="2dp"
+                            android:alpha="0.8"/>
+
+                    </LinearLayout>
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/notificationSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+                <!-- Pop-up Ayarları (Large Card) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_card"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:visibility="gone"
+                    android:padding="18dp"
+                    android:layout_marginBottom="18dp"
+                    android:elevation="2dp"
+                    android:clipToOutline="true">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pop-up settings"
+                        android:textColor="#FFF"
+                        android:textSize="19sp"
+                        android:textStyle="bold"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/bold_roboto"/>
+
+                    <ImageView
+                        android:src="@drawable/pod"
+                        app:tint="#FFF"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"/>
+                </LinearLayout>
+
+                <!-- Ayar Kartları Grid -->
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="2"
+                    android:rowCount="2"
+                    android:alignmentMode="alignMargins"
+                    android:rowOrderPreserved="false"
+                    android:useDefaultMargins="true"
+                    android:layout_marginBottom="120dp">
+
+                    <!-- Kart 1 -->
+                    <LinearLayout
+                        android:id="@+id/pd"
+                        android:layout_width="0dp"
+                        android:layout_height="110dp"
+                        android:layout_columnWeight="1"
+                        android:background="@drawable/bg_card"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:layout_margin="8dp"
+                        android:elevation="1dp">
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:src="@drawable/ic_popup_settings"
+                            app:tint="#FFF"
+                            android:layout_marginBottom="6dp"/>
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:text="@string/bbl17"
+                            android:textColor="#FFF"
+                            android:textSize="16sp"/>
+                    </LinearLayout>
+
+                    <!-- Kart 2 -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="110dp"
+                        android:layout_columnWeight="1"
+                        android:background="@drawable/bg_card"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:layout_margin="8dp"
+                        android:elevation="1dp">
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:src="@drawable/ic_sound_settings"
+                            app:tint="#FFF"
+                            android:layout_marginBottom="6dp"/>
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:text="Sound settings"
+                            android:textColor="#FFF"
+                            android:textSize="16sp"/>
+                    </LinearLayout>
+
+                    <!-- Kart 3 -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="110dp"
+                        android:layout_columnWeight="1"
+                        android:background="@drawable/bg_card"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:layout_margin="8dp"
+                        android:elevation="1dp">
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:src="@drawable/ic_find_earphones"
+                            app:tint="#FFF"
+                            android:layout_marginBottom="6dp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Find earphones"
+                            android:textColor="#FFF"
+                            android:textSize="16sp"/>
+                    </LinearLayout>
+
+                    <!-- Kart 4 -->
+                    <LinearLayout
+                        android:id="@+id/sd"
+                        android:layout_width="0dp"
+                        android:layout_height="110dp"
+                        android:layout_columnWeight="1"
+                        android:background="@drawable/bg_card"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:layout_margin="8dp"
+                        android:elevation="1dp">
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:src="@drawable/ic_auto_sound"
+                            app:tint="#FFF"
+                            android:layout_marginBottom="6dp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Auto sound"
+                            android:textColor="#FFF"
+                            android:textSize="16sp"/>
+                    </LinearLayout>
+                </GridLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- Bottom Navigation Bar -->
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNav"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_gravity="bottom"
+            app:menu="@menu/bottom_nav_menu"
+            android:background="@drawable/bg_nav_blue"
+            app:itemIconTint="@color/nav_item_selector"
+            app:itemTextColor="@color/nav_item_selector"/>
+
+        <!-- Bluetooth FAB (üstte floating) -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/bluetoothFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:layout_marginBottom="45dp"
+            android:src="@drawable/ic_bluetooth"
+            android:backgroundTint="#1976D2"
+            android:tint="#FFFFFF"
+            app:elevation="12dp"
+            android:scaleType="center"
+            android:padding="12dp"
+            app:borderWidth="0dp"
+            app:fabSize="normal"
+            android:foregroundGravity="center"
+            app:rippleColor="#BBDEFB"/>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

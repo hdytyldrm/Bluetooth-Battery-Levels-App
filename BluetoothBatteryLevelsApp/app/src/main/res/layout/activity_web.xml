@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:aapt="http://schemas.android.com/aapt"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:dist="http://schemas.android.com/apk/distribution"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <WebView
+                android:id="@+id/webView1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_loadingscreen"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white">
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/animationView"
+                android:layout_width="@dimen/_150sdp"
+                android:layout_height="@dimen/_150sdp"
+                android:layout_centerInParent="true"
+                android:indeterminate="true"
+                app:indicatorColor="@color/tc_one"
+                app:indicatorSize="@dimen/_80sdp"
+                app:trackColor="#e0cfff"
+                app:trackThickness="7dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/animationView"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:text="Loading.."
+                android:textColor="@color/tc_one"
+                android:textSize="@dimen/_20sdp" />
+        </RelativeLayout>
+    </RelativeLayout>
+</layout>
+

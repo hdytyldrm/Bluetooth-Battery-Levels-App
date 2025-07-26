@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F7F9FB">
+
+    <!-- Notification Switchli Card - Header ile Ana Card Arasında -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/notificationCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="8dp"
+        app:cardBackgroundColor="#E9F1FC"
+        app:strokeWidth="0dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="280dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_notifications_flat"
+                app:tint="#1976D2"
+                android:background="@drawable/flat_circle_bg"
+                android:padding="6dp"
+                android:layout_marginEnd="14dp"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Batarya Bildirimleri"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#222222" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Durum çubuğunda göster"
+                    android:textSize="12sp"
+                    android:textColor="#757575"
+                    android:layout_marginTop="1dp" />
+            </LinearLayout>
+
+            <Switch
+                android:id="@+id/notificationSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:thumbTint="@color/white"
+                android:trackTint="#6C757D" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Üstte illustration ve başlık -->
+            <LinearLayout
+                android:id="@+id/headerSection"
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                android:orientation="vertical"
+                android:background="@drawable/bg_gradient_acik"
+                android:gravity="center_horizontal">
+
+                <ImageView
+                    android:id="@+id/illustrationOrDeviceIcon"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/ic_headphones_illustration"
+                    android:layout_marginTop="44dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="Illustration"/>
+
+                <TextView
+                    android:id="@+id/deviceTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No Device Connected"
+                    android:textColor="#222222"
+                    android:textStyle="bold"
+                    android:textSize="22sp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="14dp"/>
+            </LinearLayout>
+
+            <!-- Kıvrımlı Ana Card Container -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="-20dp"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="6dp"
+
+                app:strokeWidth="0dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:strokeColor="#E8E8E8">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#FFFFFF"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:paddingTop="60dp"
+                    android:paddingBottom="100dp">
+
+                    <!-- Grid Kartlar (2x3) -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <!-- İlk Satır -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="12dp">
+
+                            <!-- Pop-up Ayarları Card -->
+                            <com.google.android.material.card.MaterialCardView
+                                android:id="@+id/pd"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                app:cardCornerRadius="20dp"
+                                app:cardElevation="4dp"
+                                app:strokeWidth="0dp"
+                                app:cardBackgroundColor="#EFF4FA"
+                                android:clickable="true"
+                                android:layout_marginEnd="12dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="8dp"
+                                android:layout_marginBottom="8dp"
+                                android:focusable="true"
+                                android:foreground="?android:attr/selectableItemBackground">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:padding="18dp"
+                                    android:gravity="center">
+
+                                    <ImageView
+                                        android:layout_width="36dp"
+                                        android:layout_height="36dp"
+                                        android:layout_marginBottom="8dp"
+                                        android:src="@drawable/ic_settings_flat"
+                                        app:tint="#1976D2"
+                                        android:background="@drawable/flat_circle_bg"
+                                        android:padding="6dp"/>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Pop-up Ayarları"
+                                        android:textSize="14sp"
+                                        android:textColor="#2E2E2E"
+                                        android:gravity="center" />
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <!-- Ses Ayarları Card -->
+                            <com.google.android.material.card.MaterialCardView
+                                android:id="@+id/volume"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                app:cardCornerRadius="20dp"
+                                app:cardElevation="4dp"
+                                app:strokeWidth="0dp"
+                                app:cardBackgroundColor="#EFF4FA"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:layout_marginEnd="12dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="8dp"
+                                android:layout_marginBottom="8dp"
+                                android:foreground="?android:attr/selectableItemBackground">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:padding="18dp"
+                                    android:gravity="center">
+
+                                    <ImageView
+                                        android:layout_width="36dp"
+                                        android:layout_height="36dp"
+                                        android:layout_marginBottom="8dp"
+                                        android:src="@drawable/ic_volume_flat"
+                                        app:tint="#1976D2"
+                                        android:background="@drawable/flat_circle_bg"
+                                        android:padding="6dp"/>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Ses Ayarları"
+                                        android:textSize="14sp"
+                                        android:textColor="#2E2E2E"
+                                        android:gravity="center" />
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
+                        </LinearLayout>
+
+                        <!-- İkinci Satır -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="12dp">
+
+                            <!-- Kulaklık Bul Card -->
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                app:cardCornerRadius="20dp"
+                                app:cardElevation="4dp"
+                                app:strokeWidth="0dp"
+                                app:cardBackgroundColor="#EFF4FA"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:layout_marginEnd="12dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="8dp"
+                                android:layout_marginBottom="8dp"
+                                android:foreground="?android:attr/selectableItemBackground">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:padding="18dp"
+                                    android:gravity="center">
+
+                                    <ImageView
+                                        android:layout_width="36dp"
+                                        android:layout_height="36dp"
+                                        android:layout_marginBottom="8dp"
+                                        android:src="@drawable/ic_location_flat"
+                                        app:tint="#1976D2"
+                                        android:background="@drawable/flat_circle_bg"
+                                        android:padding="6dp"/>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Kulaklık Bul"
+                                        android:textSize="14sp"
+                                        android:textColor="#2E2E2E"
+                                        android:gravity="center" />
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <!-- Otomatik Ses Card -->
+                            <com.google.android.material.card.MaterialCardView
+                                android:id="@+id/sd"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                app:cardCornerRadius="20dp"
+                                app:cardElevation="4dp"
+                                app:strokeWidth="0dp"
+                                app:cardBackgroundColor="#EFF4FA"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:layout_marginEnd="12dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="8dp"
+                                android:layout_marginBottom="8dp"
+                                android:foreground="?android:attr/selectableItemBackground">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:padding="18dp"
+                                    android:gravity="center">
+
+                                    <ImageView
+                                        android:layout_width="36dp"
+                                        android:layout_height="36dp"
+                                        android:layout_marginBottom="8dp"
+                                        android:src="@drawable/ic_auto_sound_flat"
+                                        app:tint="#1976D2"
+                                        android:background="@drawable/flat_circle_bg"
+                                        android:padding="6dp"/>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Otomatik Ses"
+                                        android:textSize="14sp"
+                                        android:textColor="#2E2E2E"
+                                        android:gravity="center" />
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
+                        </LinearLayout>
+
+                        <!-- Üçüncü Satır - İki ek kart -->
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Alt navigation -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/white"
+        app:elevation="12dp"
+        app:menu="@menu/bottom_nav_menu"
+        app:itemIconTint="@color/bottom_nav_color"
+        app:itemTextColor="@color/bottom_nav_color"
+        app:labelVisibilityMode="labeled" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

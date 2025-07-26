@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="48dp"
+    android:layout_height="48dp">
+
+    <!-- 3D Case Container -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:rotationX="15">
+
+        <!-- Case Alt Kısmı -->
+        <View
+            android:layout_width="36dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center|bottom"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/case_bottom_part"
+            android:elevation="4dp" />
+
+        <!-- Case Üst Kapağı (Açık) -->
+        <View
+            android:layout_width="36dp"
+            android:layout_height="16dp"
+            android:layout_gravity="center|top"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/case_top_part"
+            android:elevation="6dp"
+            android:rotationX="-25" />
+
+        <!-- Sol AirPod Yuvası -->
+        <View
+            android:layout_width="8dp"
+            android:layout_height="12dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="-8dp"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/case_slot"
+            android:elevation="2dp" />
+
+        <!-- Sağ AirPod Yuvası -->
+        <View
+            android:layout_width="8dp"
+            android:layout_height="12dp"
+            android:layout_gravity="center"
+            android:layout_marginEnd="-8dp"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/case_slot"
+            android:elevation="2dp" />
+
+        <!-- LED Işığı -->
+        <View
+            android:layout_width="4dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center|bottom"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/led_green"
+            android:elevation="8dp" />
+
+    </FrameLayout>
+
+</FrameLayout>

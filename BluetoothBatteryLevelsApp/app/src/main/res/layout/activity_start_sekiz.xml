@@ -1,0 +1,657 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="@drawable/bg_gradient_dort">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="80dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/batteryCard"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_24sdp"
+                android:layout_marginEnd="@dimen/_8sdp"
+                app:cardBackgroundColor="#DFE9F5"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="4dp"
+                app:strokeColor="#C3D9FF"
+                app:strokeWidth="1dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="24dp">
+                    <LinearLayout
+                        android:id="@+id/noConnectionSection"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/noConnectionIconCard"
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"
+                            android:layout_margin="@dimen/_4sdp"
+                            app:cardBackgroundColor="#E6EDF6"
+                            app:cardCornerRadius="70dp"
+                            app:cardElevation="8dp"
+                            app:strokeWidth="0dp">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/noConnectionIcon"
+                                android:layout_width="110dp"
+                                android:layout_height="110dp"
+                                android:layout_gravity="center"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/ic_headphones_illustration"
+                                app:shapeAppearanceOverlay="@style/ShapeAppearance.App.CircleImageView" />
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="24dp"
+                            android:gravity="center"
+                            android:text="@string/text_waiting_for_connection"
+                            android:textColor="#333333"
+                            android:textSize="22sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:gravity="center"
+                            android:text="@string/text_connect_device_for_battery"
+                            android:textColor="#666666"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:visibility="visible">
+                        <TextView
+                            android:id="@+id/deviceTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:text="AirPods Pro"
+                            android:textColor="@color/text_primary"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+                        <LinearLayout
+                            android:id="@+id/batteryLevelsSection"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_32sdp"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:weightSum="3">
+                            <LinearLayout
+                                android:id="@+id/leftEarbudSection"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="vertical">
+                                <FrameLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="8dp">
+                                    <ImageView
+                                        android:id="@+id/leftBatteryIcon"
+                                        android:layout_width="64dp"
+                                        android:layout_height="64dp"
+                                        android:adjustViewBounds="true"
+                                        android:scaleType="fitCenter"
+                                        android:src="@drawable/airport_left_3d" />
+                                    <com.google.android.material.card.MaterialCardView
+                                        android:layout_width="18dp"
+                                        android:layout_height="18dp"
+                                        android:layout_gravity="top|start"
+                                        android:layout_marginStart="2dp"
+                                        android:layout_marginTop="2dp"
+                                        app:cardBackgroundColor="@color/blue_600"
+                                        app:cardCornerRadius="9dp"
+                                        app:cardElevation="2dp">
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:gravity="center"
+                                            android:text="@string/battery_level_left_earbud"
+                                            android:textColor="@color/white"
+                                            android:textSize="11sp"
+                                            android:textStyle="bold" />
+                                    </com.google.android.material.card.MaterialCardView>
+                                </FrameLayout>
+                                <LinearLayout
+                                    android:layout_width="48dp"
+                                    android:layout_height="12dp"
+                                    android:layout_marginBottom="8dp"
+                                    android:background="@drawable/battery_background"
+                                    android:orientation="horizontal">
+                                    <View
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="85"
+                                        android:background="@drawable/battery_fill_green" />
+                                    <View
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="15" />
+                                </LinearLayout>
+                                <TextView
+                                    android:id="@+id/leftBatteryText"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="85%"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                            <LinearLayout
+                                android:id="@+id/rightEarbudSection"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="vertical">
+                                <FrameLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="8dp">
+                                    <ImageView
+                                        android:id="@+id/rightBatteryIcon"
+                                        android:layout_width="64dp"
+                                        android:layout_height="64dp"
+                                        android:adjustViewBounds="true"
+                                        android:scaleType="fitCenter"
+                                        android:scaleX="-1"
+                                        android:src="@drawable/airport_left_3d" />
+                                    <com.google.android.material.card.MaterialCardView
+                                        android:layout_width="18dp"
+                                        android:layout_height="18dp"
+                                        android:layout_gravity="top|end"
+                                        android:layout_marginTop="2dp"
+                                        app:cardBackgroundColor="@color/blue_600"
+                                        app:cardCornerRadius="9dp"
+                                        app:cardElevation="2dp">
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:gravity="center"
+                                            android:text="@string/battery_level_right_earbud"
+                                            android:textColor="@color/white"
+                                            android:textSize="11sp"
+                                            android:textStyle="bold" />
+                                    </com.google.android.material.card.MaterialCardView>
+                                </FrameLayout>
+                                <LinearLayout
+                                    android:layout_width="48dp"
+                                    android:layout_height="12dp"
+                                    android:layout_marginBottom="8dp"
+                                    android:background="@drawable/battery_background"
+                                    android:orientation="horizontal">
+                                    <View
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="82"
+                                        android:background="@drawable/battery_fill_green" />
+                                    <View
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="18" />
+                                </LinearLayout>
+                                <TextView
+                                    android:id="@+id/rightBatteryText"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="82%"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                            <LinearLayout
+                                android:id="@+id/caseSection"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="vertical">
+                                <FrameLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="8dp">
+                                    <ImageView
+                                        android:id="@+id/caseBatteryIcon"
+                                        android:layout_width="64dp"
+                                        android:layout_height="64dp"
+                                        android:adjustViewBounds="true"
+                                        android:scaleType="fitCenter"
+                                        android:src="@drawable/pod_case" />
+                                </FrameLayout>
+                                <LinearLayout
+                                    android:layout_width="48dp"
+                                    android:layout_height="12dp"
+                                    android:layout_marginBottom="8dp"
+                                    android:background="@drawable/battery_background"
+                                    android:orientation="horizontal">
+                                    <View
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="65"
+                                        android:background="@drawable/battery_fill_orange" />
+                                    <View
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="35" />
+                                </LinearLayout>
+                                <TextView
+                                    android:id="@+id/caseBatteryText"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="65%"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/genericDeviceSection"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+                            <ImageView
+                                android:id="@+id/genericBatteryIcon"
+                                android:layout_width="120dp"
+                                android:layout_height="120dp"
+                                android:layout_marginBottom="24dp"
+                                android:adjustViewBounds="true"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/headphone" />
+                            <TextView
+                                android:id="@+id/genericBatteryText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="90%"
+                                android:textColor="@color/text_primary"
+                                android:textSize="28sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/notifyCard"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="8dp"
+                app:cardBackgroundColor="#EFF4FA"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="4dp"
+                app:strokeWidth="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/batteryCard">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="20dp">
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@drawable/flat_circle_bg"
+                        android:padding="8dp"
+                        android:src="@drawable/ic_notifications_flat"
+                        app:tint="#1976D2" />
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/title_battery_notifications"
+                            android:textColor="#2E2E2E"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="@string/setting_show_battery_in_notification_bar"
+                            android:textColor="#757575"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/notificationSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text=""
+                        android:thumb="@drawable/switch_thumb_custom"
+                        app:track="@drawable/switch_track_custom" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
+                android:id="@+id/settingsLinear"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/notifyCard">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_8sdp"
+                    android:orientation="horizontal">
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/pd"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="12dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        app:cardCornerRadius="24dp"
+                        app:cardElevation="4dp"
+                        app:strokeWidth="0dp"
+                        app:cardBackgroundColor="#EFF4FA"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?android:attr/selectableItemBackground">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="20dp">
+
+                            <ImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_marginBottom="12dp"
+                                android:background="@drawable/flat_circle_bg"
+                                android:padding="8dp"
+                                android:src="@drawable/ic_playlist_check"
+                                app:tint="#1976D2" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="@string/bbl17"
+                                android:textColor="#2E2E2E"
+                                android:textSize="14sp"
+                                android:textStyle="normal" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/volume"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        app:cardCornerRadius="24dp"
+                        app:cardElevation="4dp"
+                        app:strokeWidth="0dp"
+                        app:cardBackgroundColor="#EFF4FA"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?android:attr/selectableItemBackground">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="20dp"
+                            android:gravity="center">
+                            <ImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_marginBottom="12dp"
+                                android:src="@drawable/ic_volume_flat"
+                                app:tint="#1976D2"
+                                android:background="@drawable/flat_circle_bg"
+                                android:padding="8dp"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/title_sound_settings"
+                                android:textSize="14sp"
+                                android:textStyle="normal"
+                                android:textColor="#2E2E2E"
+                                android:gravity="center" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+                <LinearLayout
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="24dp">
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="12dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        app:cardCornerRadius="24dp"
+                        app:cardElevation="4dp"
+                        app:strokeWidth="0dp"
+                        app:cardBackgroundColor="#EFF4FA"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?android:attr/selectableItemBackground">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="20dp"
+                            android:gravity="center">
+                            <ImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_marginBottom="12dp"
+                                android:src="@drawable/ic_location_flat"
+                                app:tint="#1976D2"
+                                android:background="@drawable/flat_circle_bg"
+                                android:padding="8dp"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/action_find_earbuds"
+                                android:textSize="14sp"
+                                android:textStyle="normal"
+                                android:textColor="#2E2E2E"
+                                android:gravity="center" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/sd"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        app:cardCornerRadius="24dp"
+                        app:cardElevation="4dp"
+                        app:strokeWidth="0dp"
+                        app:cardBackgroundColor="#EFF4FA"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?android:attr/selectableItemBackground">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="20dp"
+                            android:gravity="center">
+                            <ImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_marginBottom="12dp"
+                                android:src="@drawable/ic_auto_sound_flat"
+                                app:tint="#1976D2"
+                                android:background="@drawable/flat_circle_bg"
+                                android:padding="8dp"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/setting_auto_sound"
+                                android:textSize="14sp"
+                                android:textStyle="normal"
+                                android:textColor="#2E2E2E"
+                                android:gravity="center" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/ad_view_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="@dimen/_8sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/settingsLinear" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottomAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom"
+        android:backgroundTint="#EFF4FA"
+        app:fabCradleMargin="10dp"
+        app:fabCradleRoundedCornerRadius="20dp"
+        app:hideOnScroll="false" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/nav_info"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/nav_info_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_info"
+                app:tint="#455A64" />
+
+            <TextView
+                android:id="@+id/nav_info_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title_about"
+                android:textColor="#455A64"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="80dp"
+            android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:id="@+id/nav_rate_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/nav_rate_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_star"
+                app:tint="#455A64" />
+
+            <TextView
+                android:id="@+id/nav_rate_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/action_rate_app"
+                android:textColor="#455A64"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/bluetoothFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#1976D2"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:src="@drawable/ic_bluetooth"
+        app:layout_anchor="@id/bottomAppBar"
+        app:tint="@color/white" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#05b970</color>
+    <color name="colorPrimaryDark">#05b970</color>
+    <color name="colorAccent">#05b970</color>
+
+    <color name="primarymain">#05b970</color>
+    <color name="colorlight">#131313</color>
+
+    <color name="colorlightdark">#131313</color>
+
+    <color name="adstext">#FFFFFF</color>
+
+
+    <color name="blackads">#1a1a1a</color>
+    <color name="black1">#4c4c4c</color>
+
+
+    <color name="coloracent">#ff018786</color>
+    <color name="shimmer_color">#989898</color>
+    <color name="tc_one">#00ff19</color>
+    <!-- Notification colors -->
+    <color name="notification_background">#1E1E1E</color>
+    <color name="notification_title_color">#FFFFFF</color>
+    <color name="notification_subtitle_color">#CCFFFFFF</color>
+    <color name="notification_icon_tint">#4CAF50</color>
+    <color name="notification_accent_color">#FF9800</color>
+
+    <!-- Widget colors -->
+    <color name="widget_background">#88000000</color>
+    <color name="widget_text_primary">#FFFFFF</color>
+    <color name="widget_text_secondary">#CCFFFFFF</color>
+    <color name="widget_accent">#4CAF50</color>
+    <color name="widget_case_accent">#FF9800</color>
+
+    <!-- UI colors for StartActivityYeni -->
+    <color name="primary_blue">#1976D2</color>
+    <color name="text_white">#FFFFFF</color>
+    <color name="text_gray">#CCFFFFFF</color>
+    <color name="background_dark">#121212</color>
+        <!-- Existing colors -->
+        <color name="purple_200">#FFBB86FC</color>
+        <color name="purple_700">#FF3700B3</color>
+        <color name="teal_200">#FF03DAC5</color>
+        <color name="teal_700">#FF018786</color>
+        <color name="black">#FF000000</color>
+        <color name="white">#FFFFFFFF</color>
+
+        <!-- NEW: Modern Dark Theme Palette -->
+
+        <!-- Primary Colors -->
+        <color name="primary_dark">#121212</color>
+        <color name="primary_surface">#1E1E1E</color>
+        <color name="primary_elevated">#2D2D30</color>
+
+        <!-- Accent Colors -->
+        <color name="accent_green">#4CAF50</color>          <!-- Charging/Connected -->
+        <color name="accent_green_light">#81C784</color>    <!-- Light variant -->
+        <color name="accent_orange">#FF9800</color>         <!-- Case/Warning -->
+        <color name="accent_orange_light">#FFB74D</color>   <!-- Light variant -->
+        <color name="accent_blue">#2196F3</color>           <!-- Primary accent -->
+        <color name="accent_blue_light">#64B5F6</color>     <!-- Light variant -->
+        <color name="accent_red">#F44336</color>            <!-- Low battery/Error -->
+        <color name="accent_red_light">#E57373</color>      <!-- Light variant -->
+
+        <!-- Gradient Colors -->
+        <color name="gradient_start">#1A1A2E</color>        <!-- Deep navy -->
+        <color name="gradient_middle">#16213E</color>       <!-- Navy blue -->
+        <color name="gradient_end">#0F3460</color>          <!-- Darker blue -->
+
+        <!-- Card & Surface Colors -->
+        <color name="card_background">#363636</color>       <!-- More visible surface -->
+        <color name="card_background_light">#424242</color> <!-- Lighter variant -->
+        <color name="card_stroke">#666666</color>           <!-- More visible border -->
+        <color name="card_glow">#33FFFFFF</color>           <!-- Subtle glow effect -->
+
+        <!-- Text Colors -->
+        <color name="text_tertiary">#80FFFFFF</color>       <!-- Tertiary text (50% opacity) -->
+        <color name="text_disabled">#61FFFFFF</color>       <!-- Disabled text (38% opacity) -->
+
+        <!-- Status Colors -->
+        <color name="status_charging">#4CAF50</color>       <!-- Charging indicator -->
+        <color name="status_low_battery">#FF5722</color>    <!-- Low battery -->
+        <color name="status_disconnected">#9E9E9E</color>   <!-- Disconnected -->
+
+        <!-- Interactive Colors -->
+        <color name="ripple_color">#33FFFFFF</color>        <!-- Touch ripple -->
+        <color name="overlay_dark">#66000000</color>        <!-- Dark overlay -->
+        <color name="overlay_light">#33FFFFFF</color>       <!-- Light overlay -->
+
+        <!-- Navigation Colors -->
+        <color name="nav_background">#1F1F1F</color>        <!-- Navigation background -->
+        <color name="nav_selected">#2196F3</color>          <!-- Selected nav item -->
+        <color name="nav_unselected">#757575</color>        <!-- Unselected nav item -->
+
+    <color name="card_background_transparent">#26FFFFFF</color>  <!-- 15% white -->
+    <color name="card_background_secondary">#1AFFFFFF</color>    <!-- 10% white -->
+    <color name="card_stroke_color">#1AFFFFFF</color>            <!-- 10% white border -->
+    <color name="card_stroke_secondary">#0DFFFFFF</color>        <!-- 5% white border -->
+
+    <!-- Material Cards for Grid -->
+    <color name="material_card_background">#1EFFFFFF</color>     <!-- 12% white -->
+    <color name="material_card_stroke">#1AFFFFFF</color>         <!-- 10% white border -->
+    <color name="material_card_ripple">#4DFFFFFF</color>         <!-- 30% white ripple -->
+
+    <!-- Additional colors if needed -->
+    <color name="transparent_white_light">#0DFFFFFF</color>      <!-- 5% white -->
+    <color name="transparent_white_medium">#1AFFFFFF</color>     <!-- 10% white -->
+    <color name="transparent_white_strong">#4DFFFFFF</color>     <!-- 30% white -->
+
+    <!-- Purple Theme Colors -->
+    <color name="purple_50">#F3E5F5</color>
+    <color name="purple_500">#9C27B0</color>
+    <color name="purple_600">#8E24AA</color>
+
+    <!-- Gray Colors -->
+    <color name="gray_50">#F9FAFB</color>
+    <color name="gray_500">#6B7280</color>
+    <color name="gray_800">#1F2937</color>
+
+    <!-- Status Colors -->
+    <color name="green_500">#10B981</color>
+    <color name="green_600">#059669</color>
+    <color name="blue_500">#3B82F6</color>
+    <color name="orange_600">#EA580C</color>
+    <color name="red_500">#EF4444</color>
+    <color name="yellow_600">#D97706</color>
+
+    <!-- Primary Colors -->
+    <color name="blue_50">#E3F2FD</color>
+    <color name="blue_100">#BBDEFB</color>
+    <color name="blue_600">#1E88E5</color>
+    <color name="blue_700">#1976D2</color>
+
+    <!-- Secondary Colors -->
+    <color name="green_100">#C8E6C9</color>
+    <color name="green_700">#388E3C</color>
+
+    <color name="purple_100">#E1BEE7</color>
+
+    <color name="red_100">#FFCDD2</color>
+    <color name="red_700">#D32F2F</color>
+
+    <color name="yellow_100">#FFF9C4</color>
+    <color name="yellow_700">#F57F17</color>
+
+    <color name="orange_500">#FF9800</color>
+
+    <!-- Gray Scale -->
+    <color name="gray_100">#F5F5F5</color>
+    <color name="gray_200">#EEEEEE</color>
+    <color name="background_gray">#FAFAFA</color>
+
+    <!-- Text Colors -->
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="text_secondary_dark">#757575</color>
+    <color name="green_connected">#4CAF50</color>
+    <color name="red_disconnected">#F44336</color>
+    <color name="card_background_light_iki">#EFF4FA</color>
+    <color name="gray_iki_yeni">#E1E1E1</color>
+
+</resources>

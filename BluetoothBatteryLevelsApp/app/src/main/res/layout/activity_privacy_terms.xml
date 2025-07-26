@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="@drawable/bg_gradient_dort"
+    tools:context=".splashAds.PrivacyTermsActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorSurface"
+        app:elevation="0dp">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="@string/title_terms_of_use"
+            app:titleTextColor="#2E2E2E" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="230dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            app:cardBackgroundColor="#EFF4FA"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/publishing_rules_notice"
+                    android:textColor="#333333"
+                    android:textSize="14sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/content_policy_text"
+                    android:textColor="#666666"
+                    android:textSize="12sp"
+                    android:lineSpacingExtra="4dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/content_policy_exceptions"
+                    android:textColor="#666666"
+                    android:textSize="12sp"
+                    android:lineSpacingExtra="4dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/prohibited_content_policy"
+                    android:textColor="#666666"
+                    android:textSize="12sp"
+                    android:lineSpacingExtra="4dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/graphic_violence_policy"
+                    android:textColor="#666666"
+                    android:textSize="12sp"
+                    android:lineSpacingExtra="4dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/violation_consequences_reporting"
+                    android:textColor="#666666"
+                    android:textSize="12sp"
+                    android:lineSpacingExtra="4dp"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="bottom"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="8dp"
+        android:background="#EFF4FA">
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/first_check"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/first_check"
+            android:textColor="#333333"
+            android:textSize="12sp"
+            app:buttonTint="@color/checkbox_tint_selector" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/second_check"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/second_check"
+            android:textColor="#333333"
+            android:textSize="12sp"
+            app:buttonTint="@color/checkbox_tint_selector" />
+
+        <TextView
+            android:id="@+id/termtextview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:padding="8dp"
+            android:text="@string/clickforprivacy"
+            android:textColor="@color/black1"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/accept_button"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/accept_and_start"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            app:cornerRadius="16dp"
+            android:backgroundTint="@color/blue_600" />
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

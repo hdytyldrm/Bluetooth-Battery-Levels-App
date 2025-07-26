@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="48dp"
+    android:layout_height="48dp">
+
+    <!-- 3D Sol AirPod Container -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:rotation="15"
+        android:rotationX="5"
+        android:rotationY="-25">
+
+        <!-- Kulak Kısmı -->
+        <View
+            android:layout_width="20dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center|top"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/airpod_ear_part"
+            android:elevation="4dp" />
+
+        <!-- Sap Kısmı -->
+        <View
+            android:layout_width="8dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center|bottom"
+            android:layout_marginBottom="2dp"
+            android:background="@drawable/airpod_stem_part"
+            android:elevation="2dp" />
+
+        <!-- Siyah Speaker Noktası -->
+        <View
+            android:layout_width="4dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="-4dp"
+            android:background="@drawable/circle_black"
+            android:elevation="6dp" />
+
+        <!-- Gri Çizgi -->
+        <View
+            android:layout_width="8dp"
+            android:layout_height="2dp"
+            android:layout_gravity="center|top"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/gray_line"
+            android:elevation="6dp" />
+
+    </FrameLayout>
+
+</FrameLayout>

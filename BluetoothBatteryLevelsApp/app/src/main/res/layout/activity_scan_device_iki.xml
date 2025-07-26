@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:aapt="http://schemas.android.com/aapt"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg">
+
+        <RelativeLayout
+            android:layout_above="@+id/btm1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:id="@+id/header"
+                android:layout_width="1080px"
+                android:layout_height="170px"
+                android:background="@drawable/header_bg_two">
+
+                <ImageView
+                    android:id="@+id/back"
+                    android:layout_width="80px"
+                    android:layout_height="110px"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginHorizontal="@dimen/_15sdp"
+                    android:layout_marginLeft="@dimen/_15sdp"
+                    android:layout_marginRight="@dimen/_15sdp"
+                    android:src="@drawable/back" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:fontFamily="@font/arial_regular"
+                    android:lines="1"
+                    android:text="@string/bbl26"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_15sdp" />
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/listRV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/footer"
+                android:layout_below="@+id/header"
+                android:layout_centerHorizontal="true"
+                android:layout_marginVertical="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+            <RelativeLayout
+                android:id="@+id/footer"
+                android:layout_width="match_parent"
+                android:layout_height="500px"
+                android:layout_alignParentBottom="true">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/process"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.airbnb.lottie.LottieAnimationView
+                        android:id="@+id/animation"
+                        android:layout_width="350px"
+                        android:layout_height="350px"
+                        app:layout_constraintBottom_toTopOf="@+id/bluetoothStatus"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:lottie_autoPlay="true"
+                        app:lottie_loop="true"
+                        app:lottie_rawRes="@raw/scanning" />
+
+                    <TextView
+                        android:id="@+id/bluetoothStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_10sdp"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:gravity="center"
+                        android:lines="1"
+                        android:text="@string/bbl23"
+                        android:textColor="@color/tc_one"
+                        android:textSize="@dimen/_14sdp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/animation" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:id="@+id/scan"
+                    android:layout_width="974px"
+                    android:layout_height="176px"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/effect_scan"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:text="@string/bbl25"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_15sdp" />
+            </RelativeLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/noFound"
+                android:layout_width="1000px"
+                android:layout_height="800px"
+                android:layout_centerInParent="true">
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/animationTwo"
+                    android:layout_width="500px"
+                    android:layout_height="500px"
+                    app:layout_constraintBottom_toTopOf="@+id/bluetoothStatusTwo"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="true"
+                    app:lottie_rawRes="@raw/bluetooth_icon" />
+
+                <TextView
+                    android:id="@+id/bluetoothStatusTwo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:layout_marginRight="@dimen/_10sdp"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:text="@string/bbl24"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_14sdp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/animationTwo" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/btm1"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:gravity="center"
+            android:layout_alignParentBottom="true">
+
+            <include
+                android:id="@+id/reguler_banner_ad"
+                layout="@layout/ads_layout_banner"
+                android:visibility="visible" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+</layout>
+

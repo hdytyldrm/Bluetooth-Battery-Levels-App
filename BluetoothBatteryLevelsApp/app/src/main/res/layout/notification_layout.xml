@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_64sdp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="12dp"
+    android:paddingTop="8dp"
+    android:paddingEnd="12dp"
+    android:paddingBottom="8dp"
+    android:background="@color/card_background_light_iki">
+
+    <ImageView
+        android:id="@+id/notification_device_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        tools:src="@drawable/airpodes" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/notification_device_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="#333333"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:text="Hidayet (AirPods)" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp">
+
+            <TextView
+                android:id="@+id/notification_no_connection_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_connect_for_battery_level"
+                android:textColor="#666666"
+                android:textSize="12sp"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/notification_airpods_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/notification_left_pod"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#333333"
+                    android:textSize="12sp"
+                    tools:text="@string/battery_level_left_earbud" />
+
+                <TextView
+                    android:id="@+id/notification_right_pod"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:textColor="#333333"
+                    android:textSize="12sp"
+                    tools:text="@string/battery_level_right_earbud" />
+
+                <TextView
+                    android:id="@+id/notification_case"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:textColor="#333333"
+                    android:textSize="12sp"
+                    tools:text="@string/battery_level_case" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/notification_generic_battery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#333333"
+                android:textSize="12sp"
+                android:visibility="gone"
+                tools:text="@string/label_battery" />
+
+        </FrameLayout>
+    </LinearLayout>
+</LinearLayout>

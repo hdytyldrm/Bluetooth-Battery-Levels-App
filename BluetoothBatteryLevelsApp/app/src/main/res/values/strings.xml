@@ -1,0 +1,102 @@
+<resources>
+    <string name="app_name">Bluetooth Battery Level</string>
+
+    <string name="applovin_sdk_key">applovin_sdk_key</string>
+
+    <string name="first_check">I understand that sharing of inappropriate content will not be tolerated.</string>
+    <string name="second_check">I confirm that Im 18 years old or above.</string>
+    <string name="clickforprivacy">"By Clicking 'Get Started'. You are agree to above Terms of Use and Privacy Policy. "</string>
+
+
+    <string name="app_desc">Bluetooth Battery Levels is one of the best tools because it provides details about your current connected Bluetooth battery level status.</string>
+
+    <string name="bbl1">Bluetooth Battery Levels</string>
+    <string name="bbl10">Access a All Paired Bluetooth Devices in This Application. All Device Connect or disconnect devices effortlessly from this App. Some devices also display their battery status, making it convenient to monitor their power levels &amp; Alert When Low Power Mode.</string>
+    <string name="bbl11">Next</string>
+    <string name="bbl12">Done</string>
+    <string name="bbl13">Connected</string>
+    <string name="bbl14">DisConnected</string>
+    <string name="bbl15">Show Battery Level In Notification Bar</string>
+    <string name="bbl16">DisConnect</string>
+    <string name="bbl17">Paired Devices</string>
+    <string name="bbl18">Add New Devices</string>
+    <string name="bbl19">Paired Setting</string>
+    <string name="bbl2">Bluetooth Battery Levels app displays\nthe battery status of connected devices.</string>
+    <string name="bbl20">No Headset Devices Connected</string>
+    <string name="bbl21">No</string>
+    <string name="bbl22">Privacy Policy</string>
+    <string name="bbl23">Scanning...</string>
+    <string name="bbl24">No Headset Devices Found</string>
+    <string name="bbl25">Scan</string>
+    <string name="bbl26">Available Devices</string>
+    <string name="bbl27">Setting</string>
+    <string name="bbl28">Please allow Permission</string>
+    <string name="bbl29">HSP (Headphone Profile)\nAudio low quality</string>
+    <string name="bbl3">This action may contains ad...</string>
+    <string name="bbl30">A2DP (Advanced Audio Distribution\nProfile) audio high quality.</string>
+    <string name="bbl31">History</string>
+    <string name="bbl32">Please Connect Bluetooth</string>
+    <string name="bbl33">Bluetooth Not Supported</string>
+    <string name="bbl34">Rate</string>
+    <string name="bbl35">Enjoying our app ?\nShare your rating and thoughts.</string>
+    <string name="bbl36">Cancel</string>
+    <string name="bbl37">Please select Rating.</string>
+    <string name="bbl38">There are no email clients installed.</string>
+    <string name="bbl39">No Data Found</string>
+    <string name="bbl4">Select Language</string>
+    <string name="bbl5">Show Connected Device Battery Level</string>
+    <string name="bbl6">To check Bluetooth-connected device battery levels, go to your device\'s Bluetooth settings or a compatible app. If the connected accessory supports it, you\'ll see the remaining battery charge for items like headphones, speakers, or other devices.</string>
+    <string name="bbl7">Scan &amp; Connect Bluetooth Device</string>
+    <string name="bbl8">Easily scan for nearby Bluetooth devices. The list displays available devices; tap your preferred device to initiate a connection. This allows quick and convenient pairing with your chosen Bluetooth accessory or gadget. Connect And Use Bluetooth devices</string>
+    <string name="bbl9">All Paired Devices In One Place</string>
+    <string name="copy_toast_msg">Link copied to clipboard</string>
+
+
+    <string name="location_permission_missing_message">Looks like this app doesn\'t have location services configured. Please see OneSignal docs for more information.</string>
+    <string name="location_permission_missing_title">App Missing Permission</string>
+    <string name="location_permission_name_for_title">Location</string>
+    <string name="location_permission_settings_message">sharing your device location</string>
+    <string name="no_paired_device_found">No Paired Device Found</string>
+    <string name="publishing_rules_notice">Publishing rules you should pay attention to before using our app:</string>
+    <string name="content_policy_text">Assuring you carry the rights and eligibility to post any form of content you are about to share. We never permit nudism on application/website. We won’t allow posting of sexually explicit content, sexually explicit text, images, or audio content depicting extreme sexual acts such as acts of posting Content that drives traffic to pornographic online services.</string>
+    <string name="content_policy_exceptions">Please note that we may make exceptions based on artistic, educational, historical, documentary, or scientific nature, or where there are other considerable benefits to the public at large.</string>
+    <string name="prohibited_content_policy">We don’t permit encouragement or applaud towards terrorism, formed crime scenes or hate association groups on our application/website. Attempting to sell sexual services or weapons and harmful drugs are also not permitted. We will remove reasonable threats of severity, hate arousing content/speech and the intentionally pointing of private individuals. We do not permit attacks/abuse based on skin colour, native, sex, gender, gender identity, sexual orientation, religion, disability or disease.</string>
+    <string name="graphic_violence_policy">Graphic violence is not allowed and we may remove videos or images of intense, graphic violence to make sure our application/website stays appropriate for everyone.</string>
+    <string name="violation_consequences_reporting">If anyone or any account is spotted doing the above restricted activities they can be booked and arrested for the same. If viewers spot any violations of the above rules they have the right to report the content to us by using the report feature given in our application/website.</string>
+    <string name="accept_and_start">Accept and Start</string>
+    <string name="scanning_devices">Scanning devices...</string>
+    <string name="no_device_found_soon">No Device Found Nearby\n</string>
+    <string name="content_description_rescan">Rescan</string>
+    <string name="text_waiting_for_device_connection">Waiting for Device Connection</string>
+    <string name="text_hsp_profile_call">HSP Profile (Call)</string>
+    <string name="text_a2dp_profile_media">A2DP Profile (Media)</string>
+    <string name="text_waiting_for_connection">Waiting for Connection</string>
+    <string name="text_connect_device_for_battery">Connect a device to see battery level</string>
+    <string name="battery_level_left_earbud">L</string>
+    <string name="battery_level_right_earbud">R</string>
+    <string name="battery_level_case">C</string>
+    <string name="title_battery_notifications">Battery Notifications</string>
+    <string name="setting_show_battery_in_notification_bar">Show Battery Level In Notification Bar</string>
+    <string name="title_sound_settings">Sound Settings</string>
+    <string name="action_find_earbuds">Find Earbuds</string>
+    <string name="setting_auto_sound">Auto Sound</string>
+    <string name="title_about">About</string>
+    <string name="action_rate_app">Rate App</string>
+    <string name="text_version_info">Version</string>
+    <string name="action_share_app">Share App</string>
+    <string name="title_privacy_policy">Privacy Policy</string>
+    <string name="error_no_internet_title">NO INTERNET</string>
+    <string name="error_no_internet_message">Check your Internet connection and try again.</string>
+    <string name="action_exit">Exit</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="text_connect_for_battery_level">Connect for battery level\n</string>
+    <string name="text_connect_device">Connect Device</string>
+    <string name="share_app_body">Try this great Bluetooth battery level app!\n\n</string>
+    <string name="status_connected">Connected</string>
+    <string name="battery_not_available">N/A</string>
+    <string name="bluetooth_disabled">Bluetooth Disabled</string>
+    <string name="title_scan_device">Scan Device</string>
+    <string name="title_terms_of_use">Terms of Use</string>
+    <string name="label_battery">Battery</string>
+    <string name="battery_percentage_template">Battery: %s</string>
+</resources>

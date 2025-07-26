@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:background="@color/card_background_light_iki"
+    android:orientation="horizontal"
+    android:padding="12dp">
+
+    <ImageView
+        android:id="@+id/notification_device_icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_stat_bluetooth" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/notification_device_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bağlantı Yok"
+            android:textColor="#333333"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp">
+
+            <TextView
+                android:id="@+id/notification_status_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cihaz bekleniyor..."
+                android:textColor="#666666"
+                android:textSize="14sp"
+                android:visibility="visible" />
+
+            <LinearLayout
+                android:id="@+id/notification_airpods_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone">
+                <TextView
+                    android:id="@+id/notification_left_pod"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/airport_left_3d"
+                    android:drawablePadding="4dp"
+                    android:gravity="center"
+                    android:text="-%"
+                    android:textColor="#333333"
+                    android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/notification_right_pod"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:scaleX="-1"
+                    android:drawableStart="@drawable/airport_left_3d"
+                    android:drawablePadding="4dp"
+                    android:gravity="center"
+                    android:text="-%"
+                    android:textColor="#333333"
+                    android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/notification_case"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:drawableStart="@drawable/airpod_case_3d"
+                    android:drawablePadding="4dp"
+                    android:gravity="center"
+                    android:text="-%"
+                    android:textColor="#333333"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/notification_generic_battery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_headphones"
+                android:drawablePadding="4dp"
+                android:gravity="center"
+                android:text="-%"
+                android:textColor="#333333"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
