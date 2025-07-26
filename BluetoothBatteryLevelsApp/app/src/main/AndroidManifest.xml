@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.demo.bluetoothbatterylevel">
+    package="com.hdytyldrm.batterylevel">
     <!--
          <uses-feature
         android:name="android.hardware.bluetooth"
@@ -26,10 +26,10 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <permission
-        android:name="com.demo.bluetoothbatterylevel.permission.C2D_MESSAGE"
+        android:name="com.hdytyldrm.batterylevel.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.demo.bluetoothbatterylevel.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.hdytyldrm.batterylevel.permission.C2D_MESSAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -68,10 +68,10 @@
     <uses-permission android:name="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE" />
 
     <permission
-        android:name="com.demo.bluetoothbatterylevel.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+        android:name="com.hdytyldrm.batterylevel.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.demo.bluetoothbatterylevel.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+    <uses-permission android:name="com.hdytyldrm.batterylevel.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
 
     <application
         android:name=".ads.MyApplication"
@@ -186,8 +186,8 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.demo.bluetoothbatterylevel.UPDATE_WIDGET" />
-                <action android:name="com.demo.bluetoothbatterylevel.BATTERY_UPDATE" />
+                <action android:name="com.hdytyldrm.batterylevel.UPDATE_WIDGET" />
+                <action android:name="com.hdytyldrm.batterylevel.BATTERY_UPDATE" />
             </intent-filter>
 
             <meta-data
