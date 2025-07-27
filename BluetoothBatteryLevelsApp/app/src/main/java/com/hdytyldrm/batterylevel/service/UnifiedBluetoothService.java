@@ -177,14 +177,16 @@ public class UnifiedBluetoothService extends Service implements BatteryDetection
 
                    for (BluetoothDevice device : bondedDevices) {
                        if (device.getName() != null && device.getName().contains("AirPods")) {
-                           boolean check1 = isDeviceConnectedReflection(device);
+                         //  boolean check1 = isDeviceConnectedReflection(device);
                            boolean check2 = isDeviceConnectedProfile(device);
                            boolean check3 = isDeviceConnectedState(device);
 
                            // DEBUG LOGLAR - BU SATIRLARI EKLE
-                           Log.d(TAG, "🔍 Connection checks: reflection=" + check1 + ", profile=" + check2 + ", bond=" + check3);
+                         //  Log.d(TAG, "🔍 Connection checks: reflection=" + check1 + ", profile=" + check2 + ", bond=" + check3);
 
-                           boolean isReallyConnected = check1 || check2;
+                         //  boolean isReallyConnected = check1 || check2;
+                           boolean isReallyConnected = check2 && check3;
+
 
                            Log.d(TAG, "🔍 Final result: " + isReallyConnected);
 
