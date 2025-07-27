@@ -156,12 +156,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
 
-        <service
-            android:name=".service.BluetoothService"
-            android:enabled="true"
-            android:exported="true"
-            android:foregroundServiceType="mediaPlayback"
-            android:stopWithTask="false" />
+
         <service
             android:name=".service.UnifiedBluetoothService"
             android:enabled="true"

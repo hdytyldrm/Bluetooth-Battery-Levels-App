@@ -145,8 +145,12 @@ public class GenericBluetoothDetector extends BaseDetectionStrategy {
         filter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
         filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
         filter.addAction("android.bluetooth.device.action.BATTERY_LEVEL_CHANGED");
-        context.registerReceiver(genericReceiver, filter);
-
+        //context.registerReceiver(genericReceiver, filter);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            context.registerReceiver(genericReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            context.registerReceiver(genericReceiver, filter);
+        }
         Log.d(TAG, "Generic Detector started and receiver registered.");
         checkAlreadyConnectedDevices();
         notifyStatusChange("Generic detection started");

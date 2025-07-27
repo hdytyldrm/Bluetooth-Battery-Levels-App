@@ -169,6 +169,8 @@ public class UnifiedBluetoothService extends Service implements BatteryDetection
        Log.d(TAG, "🔋 Battery data received from a detector: " + batteryData.toString());
 
        if (batteryData.isAirPods()) {
+           Log.d(TAG, "🔋 Battery data received: " + batteryData.toString());
+
            BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
            if (adapter != null && adapter.isEnabled()) {
                try {
@@ -215,6 +217,18 @@ public class UnifiedBluetoothService extends Service implements BatteryDetection
      //  updateWidgets(batteryData);
        broadcastUpdateToWidgets(batteryData);
    }
+  /* @Override
+   public void onBatteryDataReceived(BatteryData batteryData) {
+       Log.d(TAG, "🔋 Battery data received from a detector: " + batteryData.toString());
+
+       // GEÇICI: TÜM CONNECTION CHECK'LERİ BYPASS ET
+       Log.d(TAG, "⚠️ DEBUGGING: Bypassing all connection checks!");
+
+       currentBatteryData = batteryData;
+       broadcastBatteryUpdate(batteryData);
+       updateNotification(batteryData);
+       broadcastUpdateToWidgets(batteryData);
+   }*/
     @Override
     public void onDeviceConnected(BluetoothDevice device) {
         Log.d(TAG, "✅ Device connected via a detector: " + (device != null ? device.getName() : "null"));

@@ -17,6 +17,8 @@ import android.os.SystemClock;
 import android.util.Log;
 
 import com.hdytyldrm.batterylevel.model.BatteryData;
+import com.hdytyldrm.batterylevel.receivers.ScreenReceiver;
+import com.hdytyldrm.batterylevel.utils.BatteryUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,6 +45,8 @@ public class AirPodsDetector extends BaseDetectionStrategy {
     private boolean maybeConnected = false;
     private final List<ScanResult> recentBeacons = new ArrayList<>();
     private String lastSentStatus = "";
+    private BroadcastReceiver screenReceiver;
+
     public AirPodsDetector(Context context) {
         super(context, "AirPodsDetector");
         initializeBluetoothAdapter();
@@ -63,7 +67,7 @@ public class AirPodsDetector extends BaseDetectionStrategy {
         }
     }
 
-    @Override
+   /* @Override
     public void startDetection() {
         if (!isContextValid()) return;
 
@@ -80,9 +84,27 @@ public class AirPodsDetector extends BaseDetectionStrategy {
             isActive = false;
             notifyError("Error starting AirPods detection", e);
         }
-    }
+    }*/
+   @Override
+   public void startDetection() {
+       if (!isContextValid()) return;
 
-    @Override
+       try {
+           Log.d(TAG, "🔄 Starting AirPods BLE detection");
+           isActive = true;
+
+           registerBluetoothReceiver();
+           registerScreenReceiver(); // YENİ EKLENEN
+           startBLEScanner();
+
+           notifyStatusChange("AirPods detection started");
+
+       } catch (Exception e) {
+           isActive = false;
+           notifyError("Error starting AirPods detection", e);
+       }
+   }
+   /* @Override
     public void stopDetection() {
         try {
             Log.d(TAG, "⏹️ Stopping AirPods BLE detection");
@@ -97,8 +119,24 @@ public class AirPodsDetector extends BaseDetectionStrategy {
         } catch (Exception e) {
             notifyError("Error stopping AirPods detection", e);
         }
-    }
+    }*/
+   @Override
+   public void stopDetection() {
+       try {
+           Log.d(TAG, "⏹️ Stopping AirPods BLE detection");
+           isActive = false;
 
+           stopBLEScanner();
+           unregisterBluetoothReceiver();
+           unregisterScreenReceiver(); // YENİ EKLENEN
+           currentStatus = new BatteryData();
+
+           notifyStatusChange("AirPods detection stopped");
+
+       } catch (Exception e) {
+           notifyError("Error stopping AirPods detection", e);
+       }
+   }
     @Override
     public void detectDevice(BluetoothDevice device) {
         // AirPods BLE detection manuel cihaz detection'ı desteklemiyor
@@ -106,6 +144,7 @@ public class AirPodsDetector extends BaseDetectionStrategy {
         Log.d(TAG, "Manual device detection not supported for AirPods, using BLE scanning");
     }
 
+/*
     private void startBLEScanner() {
         try {
             if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
@@ -141,7 +180,41 @@ public class AirPodsDetector extends BaseDetectionStrategy {
             notifyError("Error starting BLE scanner", e);
         }
     }
+*/
+private void startBLEScanner() {
+    try {
+        if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
+            Log.w(TAG, "Bluetooth not enabled, cannot start BLE scanner");
+            return;
+        }
 
+        stopBLEScanner();
+
+        bluetoothScanner = bluetoothAdapter.getBluetoothLeScanner();
+        if (bluetoothScanner == null) {
+            notifyError("BLE scanner not available", null);
+            return;
+        }
+
+        // BATTERY AWARE SCAN SETTINGS
+        ScanSettings scanSettings = new ScanSettings.Builder()
+                .setScanMode(BatteryUtils.isSavingBattery(context) ?
+                        ScanSettings.SCAN_MODE_LOW_POWER :
+                        ScanSettings.SCAN_MODE_LOW_LATENCY)
+                .setReportDelay(1)
+                .build();
+
+        scanCallback = new AirPodsScanCallback();
+        List<ScanFilter> filters = createScanFilters();
+
+        bluetoothScanner.startScan(filters, scanSettings, scanCallback);
+        Log.d(TAG, "✅ BLE scanner started - Mode: " +
+                (BatteryUtils.isSavingBattery(context) ? "LOW_POWER" : "LOW_LATENCY"));
+
+    } catch (Exception e) {
+        notifyError("Error starting BLE scanner", e);
+    }
+}
     private void stopBLEScanner() {
         try {
             if (bluetoothScanner != null && scanCallback != null) {
@@ -299,43 +372,6 @@ public class AirPodsDetector extends BaseDetectionStrategy {
     // ===== BLE Scan Callback =====
     private class AirPodsScanCallback extends ScanCallback {
 
-       /* @Override
-        public void onScanResult(int callbackType, ScanResult result) {
-            try {
-                if (!isAirPodsResult(result)) return;
-
-                Log.d(TAG, "📡 AirPods beacon received, RSSI: " + result.getRssi() + "dB");
-
-                // En güçlü beacon'ı al (OpenPods mantığı)
-                ScanResult bestResult = getBestResult(result);
-                if (bestResult == null || bestResult.getRssi() < MIN_RSSI) {
-                    return;
-                }
-
-                // Beacon'ı decode et
-               *//* BatteryData batteryData = parseAirPodsBeacon(bestResult);
-                if (batteryData != null) {
-                    currentStatus = batteryData;
-                    notifyBatteryData(batteryData);
-                }*//*
-                BatteryData batteryData = parseAirPodsBeacon(bestResult);
-                if (batteryData != null) {
-                    // YENİ KONTROL: Sadece durum değiştiyse haber ver
-                    String currentBeaconStatus = batteryData.toString();
-                    if (!Objects.equals(lastSentStatus, currentBeaconStatus)) {
-                        lastSentStatus = currentBeaconStatus;
-                        currentStatus = batteryData;
-                        notifyDeviceConnected(result.getDevice());
-
-                        notifyBatteryData(batteryData);
-                    }
-                }
-
-            } catch (Exception e) {
-                Log.e(TAG, "Error processing scan result", e);
-            }
-        }
-*/
        @Override
        public void onScanResult(int callbackType, ScanResult result) {
            try {
@@ -515,5 +551,53 @@ public class AirPodsDetector extends BaseDetectionStrategy {
 
         Log.d(TAG, "🔋 Status " + status + " - invalid, returning --");
         return "--";
+    }
+
+    private void registerScreenReceiver() {
+        if (!isContextValid() || !BatteryUtils.isSavingBattery(context)) return;
+
+        try {
+            screenReceiver = new ScreenReceiver() {
+                @Override
+                public void onStart() {
+                    Log.d(TAG, "📱 Screen ON - resuming scanning");
+                    if (isActive) {
+                        startBLEScanner();
+                    }
+                }
+
+                @Override
+                public void onStop() {
+                    Log.d(TAG, "📱 Screen OFF - pausing scanning");
+                  //  stopBLEScanner();
+                }
+            };
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                context.registerReceiver(screenReceiver, ScreenReceiver.buildFilter(), Context.RECEIVER_NOT_EXPORTED);
+            } else {
+                context.registerReceiver(screenReceiver, ScreenReceiver.buildFilter());
+            }
+
+            Log.d(TAG, "✅ Screen receiver registered");
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error registering screen receiver", e);
+        }
+    }
+
+    // unregisterScreenReceiver() metodu ekle
+    private void unregisterScreenReceiver() {
+        if (!isContextValid()) return;
+
+        try {
+            if (screenReceiver != null) {
+                context.unregisterReceiver(screenReceiver);
+                screenReceiver = null;
+                Log.d(TAG, "✅ Screen receiver unregistered");
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error unregistering screen receiver", e);
+        }
     }
 }
