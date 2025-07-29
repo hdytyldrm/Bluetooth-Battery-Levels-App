@@ -2,8 +2,6 @@ package com.hdytyldrm.batterylevel.activity;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothManager;
-import android.bluetooth.BluetoothProfile;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -128,28 +126,16 @@ public class PairedDeviceActivity extends AppCompatActivity implements PairedDev
         }
     }
 
-
-  @Override
-  public boolean isDeviceConnected(BluetoothDevice device) {
-      try {
-          BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-
-          // Ana audio profiller
-          int a2dpState = bluetoothManager.getConnectionState(device, BluetoothProfile.A2DP);
-          int headsetState = bluetoothManager.getConnectionState(device, BluetoothProfile.HEADSET);
-
-          // Ek profiller (opsiyonel)
-          int hidState = bluetoothManager.getConnectionState(device, BluetoothProfile.HID_DEVICE);
-          int gattState = bluetoothManager.getConnectionState(device, BluetoothProfile.GATT);
-
-          return (a2dpState == BluetoothProfile.STATE_CONNECTED) ||
-                  (headsetState == BluetoothProfile.STATE_CONNECTED) ||
-                  (hidState == BluetoothProfile.STATE_CONNECTED) ||
-                  (gattState == BluetoothProfile.STATE_CONNECTED);
-      } catch (Exception e) {
-          return false;
-      }
-  }
+    @Override
+    public boolean isDeviceConnected(BluetoothDevice device) {
+        try {
+            // isConnected metodunu yansıma (reflection) ile çağırma
+            Method method = device.getClass().getMethod("isConnected", (Class[]) null);
+            return (boolean) method.invoke(device, (Object[]) null);
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
     // --- Bağlantı Metotları (Eski kodunuzdan) ---
 

@@ -78,7 +78,6 @@ public class WebActivity extends AppCompatActivity {
         }, 3000);
     }
 
-/*
     private void loadwebview(String str) {
         this.rl_loadingscreen.setVisibility(8);
         this.webView.setWebViewClient(new WebViewClient() {
@@ -109,68 +108,8 @@ public class WebActivity extends AppCompatActivity {
         this.webView.getSettings().setJavaScriptEnabled(true);
         this.webView.loadUrl(str);
     }
-*/
 
-    private void loadwebview(String str) {
-        this.rl_loadingscreen.setVisibility(8);
-        this.webView.setWebViewClient(new WebViewClient() {
-            public ProgressDialog proDial1;
-
-            @Override
-            public void onLoadResource(WebView webView, String str) {
-                if (this.proDial1 == null) {
-                    ProgressDialog progressDialog = new ProgressDialog(WebActivity.this);
-                    this.proDial1 = progressDialog;
-                    progressDialog.setMessage("Loading...");
-                    this.proDial1.setCancelable(true);
-                    this.proDial1.show();
-                }
-            }
-
-            @Override
-            public void onPageFinished(WebView webView, String str) {
-                if (this.proDial1 != null) {
-                    this.proDial1.dismiss();
-                }
-            }
-
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView webView, String str) {
-                // GÜVENLİK: Sadece HTTPS URL'lere izin ver
-                if (str.startsWith("https://")) {
-                    webView.loadUrl(str);
-                    return true;
-                } else {
-                    Log.w("WebActivity", "Non-HTTPS URL blocked: " + str);
-                    return false;
-                }
-            }
-
-            @Override
-            public void onReceivedSslError(WebView view, android.webkit.SslErrorHandler handler, android.net.http.SslError error) {
-                // GÜVENLİK: SSL hatalarında sayfayı yükleme
-                handler.cancel();
-                Log.e("WebActivity", "SSL Error detected, cancelling load");
-            }
-        });
-
-        // GÜVENLİK AYARLARI
-        android.webkit.WebSettings webSettings = this.webView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-        webSettings.setAllowFileAccess(false); // YENİ: File access kapat
-        webSettings.setAllowContentAccess(false); // YENİ: Content access kapat
-        webSettings.setAllowFileAccessFromFileURLs(false); // YENİ: File URL access kapat
-        webSettings.setAllowUniversalAccessFromFileURLs(false); // YENİ: Universal access kapat
-        webSettings.setMixedContentMode(android.webkit.WebSettings.MIXED_CONTENT_NEVER_ALLOW); // YENİ: Mixed content engelle
-
-        // GÜVENLİK: Sadece HTTPS URL'leri yükle
-        if (str != null && str.startsWith("https://")) {
-            this.webView.loadUrl(str);
-        } else {
-            Log.e("WebActivity", "Invalid or non-HTTPS URL: " + str);
-            finish(); // Activity'yi kapat
-        }
-    }
+    
     public void onPreExecute() {
         ProgressDialog progressDialog = new ProgressDialog(this);
         this.pd = progressDialog;
