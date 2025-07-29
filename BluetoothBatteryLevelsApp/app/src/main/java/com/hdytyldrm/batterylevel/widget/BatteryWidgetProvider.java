@@ -15,251 +15,8 @@ import com.hdytyldrm.batterylevel.activity.StartActivityYeni;
 import com.hdytyldrm.batterylevel.model.BatteryData;
 import com.hdytyldrm.batterylevel.service.UnifiedBluetoothService;
 
-/**
- * Home screen widget for displaying battery levels
- * Shows different layouts for AirPods vs Generic devices
- */
+
 /*
-public class BatteryWidgetProvider extends AppWidgetProvider {
-    private static final String TAG = "BatteryWidgetProvider";
-
-    // Widget actions
-    public static final String ACTION_UPDATE_WIDGET = "com.hdytyldrm.batterylevel.UPDATE_WIDGET";
-    public static final String EXTRA_WIDGET_BATTERY_DATA = "widget_battery_data";
-
-    @Override
-    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        Log.d(TAG, "🔄 Widget update requested for " + appWidgetIds.length + " widgets");
-
-        // Update tüm widget'lar için
-        for (int appWidgetId : appWidgetIds) {
-            updateWidget(context, appWidgetManager, appWidgetId, null);
-        }
-
-        super.onUpdate(context, appWidgetManager, appWidgetIds);
-    }
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        super.onReceive(context, intent);
-
-        String action = intent.getAction();
-        Log.d(TAG, "📡 Widget received action: " + action);
-
-        if (ACTION_UPDATE_WIDGET.equals(action)) {
-            // Service'dan battery data güncelleme
-            BatteryData batteryData = intent.getParcelableExtra(EXTRA_WIDGET_BATTERY_DATA);
-            updateAllWidgets(context, batteryData);
-
-        } else if (UnifiedBluetoothService.ACTION_BATTERY_UPDATE.equals(action)) {
-            // Direct service broadcast'i dinle
-            BatteryData batteryData = intent.getParcelableExtra(UnifiedBluetoothService.EXTRA_BATTERY_DATA);
-            updateAllWidgets(context, batteryData);
-        }
-    }
-
-    @Override
-    public void onEnabled(Context context) {
-        super.onEnabled(context);
-        Log.d(TAG, "✅ Widget enabled - first widget added to home screen");
-
-        // İlk widget eklendiğinde service'i başlat
-        startMonitoringService(context);
-    }
-
-    @Override
-    public void onDisabled(Context context) {
-        super.onDisabled(context);
-        Log.d(TAG, "❌ Widget disabled - last widget removed from home screen");
-
-        // TODO: Optionally stop service when no widgets remain
-        // stopMonitoringService(context);
-    }
-
-    @Override
-    public void onDeleted(Context context, int[] appWidgetIds) {
-        super.onDeleted(context, appWidgetIds);
-        Log.d(TAG, "🗑️ Widgets deleted: " + appWidgetIds.length);
-    }
-
-    */
-/**
-     * Tüm widget'ları güncelle
-     *//*
-
-    private void updateAllWidgets(Context context, BatteryData batteryData) {
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(
-                new android.content.ComponentName(context, BatteryWidgetProvider.class)
-        );
-
-        Log.d(TAG, "🔄 Updating " + appWidgetIds.length + " widgets with new battery data");
-
-        for (int appWidgetId : appWidgetIds) {
-            updateWidget(context, appWidgetManager, appWidgetId, batteryData);
-        }
-    }
-
-    */
-/**
-     * Tek bir widget'ı güncelle
-     *//*
-
-    private void updateWidget(Context context, AppWidgetManager appWidgetManager,
-                              int appWidgetId, BatteryData batteryData) {
-        try {
-            RemoteViews views;
-
-            if (batteryData == null || batteryData.isDisconnected()) {
-                views = createDisconnectedWidget(context);
-            } else if (batteryData.isAirPods()) {
-                views = createAirPodsWidget(context, batteryData);
-            } else if (batteryData.isGeneric()) {
-                views = createGenericWidget(context, batteryData);
-            } else {
-                views = createDisconnectedWidget(context);
-            }
-
-            // Click intent - ana uygulamayı aç
-            Intent intent = new Intent(context, StartActivityYeni.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(
-                    context, 0, intent, PendingIntent.FLAG_IMMUTABLE
-            );
-            views.setOnClickPendingIntent(R.id.widget_container, pendingIntent);
-
-            // Widget'ı güncelle
-            appWidgetManager.updateAppWidget(appWidgetId, views);
-
-            Log.d(TAG, "✅ Widget " + appWidgetId + " updated successfully");
-
-        } catch (Exception e) {
-            Log.e(TAG, "❌ Error updating widget " + appWidgetId, e);
-        }
-    }
-
-    */
-/**
-     * Disconnected durumu için widget
-     *//*
-
-    private RemoteViews createDisconnectedWidget(Context context) {
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_disconnected);
-
-        views.setTextViewText(R.id.widget_title, "No Device");
-        views.setTextViewText(R.id.widget_subtitle, "Connect headphones");
-        views.setImageViewResource(R.id.widget_icon, R.drawable.bluetooth); // mevcut bluetooth icon
-
-        return views;
-    }
-
-    */
-/**
-     * AirPods için widget
-     *//*
-
-    private RemoteViews createAirPodsWidget(Context context, BatteryData batteryData) {
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_airpods);
-
-        // Device name
-        views.setTextViewText(R.id.widget_device_name,
-                truncateDeviceName(batteryData.getDeviceName()));
-
-        // Battery levels
-        views.setTextViewText(R.id.widget_left_battery,
-                "L: " + batteryData.getLeftBattery());
-        views.setTextViewText(R.id.widget_right_battery,
-                "R: " + batteryData.getRightBattery());
-        views.setTextViewText(R.id.widget_case_battery,
-                "Case: " + batteryData.getCaseBattery());
-
-        // Charging indicators - sistem battery icon kullan
-        views.setImageViewResource(R.id.widget_left_icon,
-                batteryData.isLeftCharging() ?
-                        android.R.drawable.ic_lock_power_off : android.R.drawable.ic_lock_power_off);
-        views.setImageViewResource(R.id.widget_right_icon,
-                batteryData.isRightCharging() ?
-                        android.R.drawable.ic_lock_power_off : android.R.drawable.ic_lock_power_off);
-        views.setImageViewResource(R.id.widget_case_icon,
-                batteryData.isCaseCharging() ?
-                        android.R.drawable.ic_lock_power_off : android.R.drawable.ic_lock_power_off);
-
-        return views;
-    }
-
-    */
-/**
-     * Generic device için widget
-     *//*
-
-    private RemoteViews createGenericWidget(Context context, BatteryData batteryData) {
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_generic);
-
-        // Device name
-        views.setTextViewText(R.id.widget_device_name,
-                truncateDeviceName(batteryData.getDeviceName()));
-
-        // Battery level
-        views.setTextViewText(R.id.widget_battery_level,
-                batteryData.getSingleBattery());
-
-        // Charging indicator - sistem battery icon kullan
-        views.setImageViewResource(R.id.widget_battery_icon,
-                batteryData.isSingleCharging() ?
-                        android.R.drawable.ic_lock_power_off : android.R.drawable.ic_lock_power_off);
-
-        // Device icon - mevcut headphone icon kullan
-        views.setImageViewResource(R.id.widget_device_icon, R.drawable.headphone);
-
-        return views;
-    }
-
-    */
-/**
-     * Device ismini widget için kısalt
-     *//*
-
-    private String truncateDeviceName(String deviceName) {
-        if (deviceName == null) return "Unknown";
-        if (deviceName.length() > 15) {
-            return deviceName.substring(0, 12) + "...";
-        }
-        return deviceName;
-    }
-
-    */
-/**
-     * Monitoring service'i başlat
-     *//*
-
-    private void startMonitoringService(Context context) {
-        try {
-            Intent serviceIntent = new Intent(context, UnifiedBluetoothService.class);
-            context.startForegroundService(serviceIntent);
-            Log.d(TAG, "✅ Monitoring service started from widget");
-        } catch (Exception e) {
-            Log.e(TAG, "❌ Error starting service from widget", e);
-        }
-    }
-
-    */
-/**
-     * Static method - Service'dan widget update için
-     *//*
-
-    public static void updateWidgets(Context context, BatteryData batteryData) {
-        try {
-            Intent intent = new Intent(context, BatteryWidgetProvider.class);
-            intent.setAction(ACTION_UPDATE_WIDGET);
-            intent.putExtra(EXTRA_WIDGET_BATTERY_DATA, batteryData);
-            context.sendBroadcast(intent);
-
-            Log.d(TAG, "📡 Widget update broadcast sent");
-
-        } catch (Exception e) {
-            Log.e(TAG, "❌ Error sending widget update", e);
-        }
-    }
-}*/
 public class BatteryWidgetProvider extends AppWidgetProvider {
 
     // Widget'ın dinleyeceği özel Action'lar
@@ -330,6 +87,180 @@ public class BatteryWidgetProvider extends AppWidgetProvider {
             for (int appWidgetId : appWidgetIds) {
                 updateAppWidget(context, appWidgetManager, appWidgetId, batteryData);
             }
+        }
+    }
+}
+*/
+/**
+ * Home screen widget for Apple audio devices only
+ * Displays battery levels for AirPods, Beats, and other Apple audio devices
+ */
+
+
+/**
+ * Home screen widget for Apple audio devices only
+ * Displays battery levels for AirPods, Beats, and other Apple audio devices
+ */
+public class BatteryWidgetProvider extends AppWidgetProvider {
+    private static final String TAG = "AppleAudioWidget";
+
+    // Widget actions
+    public static final String ACTION_WIDGET_BATTERY_UPDATE = "com.hdytyldrm.batterylevel.WIDGET_BATTERY_UPDATE";
+    public static final String EXTRA_BATTERY_DATA = "battery_data";
+
+    @Override
+    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        Log.d(TAG, "🔄 Widget update requested for " + appWidgetIds.length + " Apple audio widgets");
+
+        for (int appWidgetId : appWidgetIds) {
+            // Show "No Apple Device" initially
+            updateAppWidget(context, appWidgetManager, appWidgetId, null);
+        }
+    }
+
+    // Main widget update logic - Apple devices only
+    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId, BatteryData batteryData) {
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
+
+        // Set click intent to open main app
+        Intent intent = new Intent(context, StartActivityYeni.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        views.setOnClickPendingIntent(R.id.widget_container_main, pendingIntent);
+
+        if (batteryData != null && batteryData.isConnected() && batteryData.isAirPods()) {
+            // Apple audio device connected
+            views.setViewVisibility(R.id.widget_device_name, View.VISIBLE);
+            views.setTextViewText(R.id.widget_device_name, getEnhancedAppleDeviceName(batteryData.getDeviceName()));
+
+            // Show Apple audio device battery layout
+            views.setViewVisibility(R.id.widget_airpods_section, View.VISIBLE);
+            views.setViewVisibility(R.id.widget_disconnected_section, View.GONE);
+
+            // Update battery levels with enhanced text
+            String leftText = context.getResources().getString(R.string.battery_level_left_earbud) + ": " + batteryData.getLeftBattery();
+            String rightText = context.getResources().getString(R.string.battery_level_right_earbud) + ": " + batteryData.getRightBattery();
+            String caseText = getCaseText(context, batteryData);
+
+            views.setTextViewText(R.id.widget_left_text, leftText);
+            views.setTextViewText(R.id.widget_right_text, rightText);
+            views.setTextViewText(R.id.widget_case_text, caseText);
+
+            // Show charging indicators if needed
+            updateChargingIndicators(views, batteryData);
+
+        } else {
+            // No Apple audio device connected
+            views.setViewVisibility(R.id.widget_device_name, View.GONE);
+            views.setViewVisibility(R.id.widget_airpods_section, View.GONE);
+            views.setViewVisibility(R.id.widget_disconnected_section, View.VISIBLE);
+
+            // Update disconnected message for Apple devices
+           /* views.setTextViewText(R.id.widget_disconnected_text,
+                    context.getResources().getString(R.string.widget_connect_message));*/
+        }
+
+        appWidgetManager.updateAppWidget(appWidgetId, views);
+        Log.d(TAG, "✅ Apple audio widget " + appWidgetId + " updated");
+    }
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
+
+        if (intent != null && ACTION_WIDGET_BATTERY_UPDATE.equals(intent.getAction())) {
+            BatteryData batteryData = intent.getParcelableExtra(EXTRA_BATTERY_DATA);
+
+            // Only update if it's an Apple device or disconnected
+            if (batteryData == null || batteryData.isDisconnected() || batteryData.isAirPods()) {
+                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+                int[] appWidgetIds = appWidgetManager.getAppWidgetIds(
+                        new ComponentName(context, BatteryWidgetProvider.class));
+
+                for (int appWidgetId : appWidgetIds) {
+                    updateAppWidget(context, appWidgetManager, appWidgetId, batteryData);
+                }
+
+                Log.d(TAG, "📡 Apple audio widgets updated: " +
+                        (batteryData != null ? batteryData.toString() : "Disconnected"));
+            }
+        }
+    }
+
+    @Override
+    public void onEnabled(Context context) {
+        super.onEnabled(context);
+        Log.d(TAG, "✅ Apple audio widget enabled - first widget added");
+    }
+
+    @Override
+    public void onDisabled(Context context) {
+        super.onDisabled(context);
+        Log.d(TAG, "❌ Apple audio widget disabled - last widget removed");
+    }
+
+    // Helper Methods
+
+    /**
+     * Enhanced Apple device name for widget display
+     */
+    private static String getEnhancedAppleDeviceName(String deviceName) {
+        if (deviceName == null || deviceName.isEmpty()) {
+            return "Apple Audio Device";
+        }
+
+        String lowerName = deviceName.toLowerCase();
+
+        // AirPods family
+        if (lowerName.contains("airpods")) {
+            if (lowerName.contains("pro")) return "AirPods Pro";
+            if (lowerName.contains("max")) return "AirPods Max";
+            return "AirPods";
+        }
+
+        // Beats family
+        if (lowerName.contains("beats")) {
+            if (lowerName.contains("solo")) return "Beats Solo";
+            if (lowerName.contains("studio")) return "Beats Studio";
+            if (lowerName.contains("powerbeats")) return "Powerbeats";
+            if (lowerName.contains("flex")) return "Beats Flex";
+            return "Beats";
+        }
+
+        return deviceName;
+    }
+
+    /**
+     * Get appropriate case text based on device type
+     */
+    private static String getCaseText(Context context, BatteryData batteryData) {
+        String deviceName = batteryData.getDeviceName();
+
+        // AirPods Max doesn't have a case
+        if (deviceName != null && deviceName.toLowerCase().contains("max")) {
+            return context.getResources().getString(R.string.no_case_available);
+        }
+
+        return context.getResources().getString(R.string.battery_level_case) + ": " + batteryData.getCaseBattery();
+    }
+
+    /**
+     * Update charging indicators in widget
+     */
+    private static void updateChargingIndicators(RemoteViews views, BatteryData batteryData) {
+        // Show charging icons if device is charging
+        // This could be enhanced with actual charging indicator icons
+
+        if (batteryData.isLeftCharging()) {
+            // Could add charging icon for left earbud
+        }
+
+        if (batteryData.isRightCharging()) {
+            // Could add charging icon for right earbud
+        }
+
+        if (batteryData.isCaseCharging()) {
+            // Could add charging icon for case
         }
     }
 }

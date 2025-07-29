@@ -83,14 +83,7 @@
                     tools:text="@string/battery_level_case" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/notification_generic_battery"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#333333"
-                android:textSize="12sp"
-                android:visibility="gone"
-                tools:text="@string/label_battery" />
+
 
         </FrameLayout>
     </LinearLayout>

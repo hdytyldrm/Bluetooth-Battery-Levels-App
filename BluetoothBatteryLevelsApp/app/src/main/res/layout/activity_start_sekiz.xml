@@ -279,30 +279,6 @@
                                     android:textStyle="bold" />
                             </LinearLayout>
                         </LinearLayout>
-                        <LinearLayout
-                            android:id="@+id/genericDeviceSection"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:visibility="gone">
-                            <ImageView
-                                android:id="@+id/genericBatteryIcon"
-                                android:layout_width="120dp"
-                                android:layout_height="120dp"
-                                android:layout_marginBottom="24dp"
-                                android:adjustViewBounds="true"
-                                android:scaleType="fitCenter"
-                                android:src="@drawable/headphone" />
-                            <TextView
-                                android:id="@+id/genericBatteryText"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="90%"
-                                android:textColor="@color/text_primary"
-                                android:textSize="28sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

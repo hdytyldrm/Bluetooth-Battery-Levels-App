@@ -8,7 +8,7 @@ public class BatteryData implements Parcelable {
     private String deviceName;
     private String deviceAddress;
 
-    // AirPods specific
+    // Apple audio device specific data
     private String leftBattery = "--";
     private String rightBattery = "--";
     private String caseBattery = "--";
@@ -18,10 +18,6 @@ public class BatteryData implements Parcelable {
     private boolean leftInEar = false;
     private boolean rightInEar = false;
 
-    // Generic device specific
-    private String singleBattery = "--";
-    private boolean singleCharging = false;
-
     private boolean isConnected = false;
     private long timestamp = System.currentTimeMillis();
 
@@ -30,11 +26,11 @@ public class BatteryData implements Parcelable {
         this.deviceType = DeviceType.DISCONNECTED;
     }
 
-    // AirPods constructor
+    // Apple audio device constructor (Primary constructor)
     public BatteryData(String deviceName, String deviceAddress, String left, String right, String caseB,
                        boolean leftChg, boolean rightChg, boolean caseChg, boolean leftInEar, boolean rightInEar) {
-        this.deviceType = DeviceType.AIRPODS;
-        this.deviceName = deviceName;
+        this.deviceType = DeviceType.AIRPODS; // All Apple devices use this type
+        this.deviceName = enhanceAppleDeviceName(deviceName);
         this.deviceAddress = deviceAddress;
         this.leftBattery = left;
         this.rightBattery = right;
@@ -48,23 +44,12 @@ public class BatteryData implements Parcelable {
         this.timestamp = System.currentTimeMillis();
     }
 
-    // Generic device constructor
-    public BatteryData(String deviceName, String deviceAddress, String battery, boolean charging) {
-        this.deviceType = DeviceType.GENERIC;
-        this.deviceName = deviceName;
-        this.deviceAddress = deviceAddress;
-        this.singleBattery = battery;
-        this.singleCharging = charging;
-        this.isConnected = true;
-        this.timestamp = System.currentTimeMillis();
-    }
-
     // Getters and Setters
     public DeviceType getDeviceType() { return deviceType; }
     public void setDeviceType(DeviceType deviceType) { this.deviceType = deviceType; }
 
     public String getDeviceName() { return deviceName; }
-    public void setDeviceName(String deviceName) { this.deviceName = deviceName; }
+    public void setDeviceName(String deviceName) { this.deviceName = enhanceAppleDeviceName(deviceName); }
 
     public String getDeviceAddress() { return deviceAddress; }
     public void setDeviceAddress(String deviceAddress) { this.deviceAddress = deviceAddress; }
@@ -78,9 +63,6 @@ public class BatteryData implements Parcelable {
     public String getCaseBattery() { return caseBattery; }
     public void setCaseBattery(String caseBattery) { this.caseBattery = caseBattery; }
 
-    public String getSingleBattery() { return singleBattery; }
-    public void setSingleBattery(String singleBattery) { this.singleBattery = singleBattery; }
-
     public boolean isLeftCharging() { return leftCharging; }
     public void setLeftCharging(boolean leftCharging) { this.leftCharging = leftCharging; }
 
@@ -89,9 +71,6 @@ public class BatteryData implements Parcelable {
 
     public boolean isCaseCharging() { return caseCharging; }
     public void setCaseCharging(boolean caseCharging) { this.caseCharging = caseCharging; }
-
-    public boolean isSingleCharging() { return singleCharging; }
-    public void setSingleCharging(boolean singleCharging) { this.singleCharging = singleCharging; }
 
     public boolean isLeftInEar() { return leftInEar; }
     public void setLeftInEar(boolean leftInEar) { this.leftInEar = leftInEar; }
@@ -105,27 +84,86 @@ public class BatteryData implements Parcelable {
     public long getTimestamp() { return timestamp; }
     public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
 
-    // Utility methods
+    // Utility methods - Simplified for Apple devices only
     public boolean isAirPods() {
-        return deviceType == DeviceType.AIRPODS;
+        return deviceType == DeviceType.AIRPODS; // All Apple audio devices
     }
 
+    @Deprecated
     public boolean isGeneric() {
-        return deviceType == DeviceType.GENERIC;
+        return false; // No longer supported
     }
 
     public boolean isDisconnected() {
         return deviceType == DeviceType.DISCONNECTED || !isConnected;
     }
 
+    /**
+     * Enhanced Apple device name detection
+     */
+    private String enhanceAppleDeviceName(String deviceName) {
+        if (deviceName == null || deviceName.isEmpty()) {
+            return "Apple Audio Device";
+        }
+
+        String lowerName = deviceName.toLowerCase();
+
+        // AirPods family
+        if (lowerName.contains("airpods")) {
+            if (lowerName.contains("pro") && lowerName.contains("2")) return "AirPods Pro (2nd gen)";
+            if (lowerName.contains("pro")) return "AirPods Pro";
+            if (lowerName.contains("max")) return "AirPods Max";
+            if (lowerName.contains("3rd") || lowerName.contains("(3")) return "AirPods (3rd gen)";
+            if (lowerName.contains("2nd") || lowerName.contains("(2")) return "AirPods (2nd gen)";
+            return "AirPods";
+        }
+
+        // Beats family
+        if (lowerName.contains("beats")) {
+            if (lowerName.contains("solo 3") || lowerName.contains("solo3")) return "Beats Solo 3";
+            if (lowerName.contains("studio 3") || lowerName.contains("studio3")) return "Beats Studio 3";
+            if (lowerName.contains("powerbeats pro")) return "Powerbeats Pro";
+            if (lowerName.contains("powerbeats 3")) return "Powerbeats 3";
+            if (lowerName.contains("flex")) return "Beats Flex";
+            if (lowerName.contains("solo")) return "Beats Solo";
+            if (lowerName.contains("studio")) return "Beats Studio";
+            if (lowerName.contains("beatsx") || lowerName.contains("beats x")) return "Beats X";
+            return "Beats";
+        }
+
+        return deviceName;
+    }
+
+    /**
+     * Get device model type for enhanced UI
+     */
+    public String getDeviceModel() {
+        if (deviceName == null) return "unknown";
+
+        String lowerName = deviceName.toLowerCase();
+
+        if (lowerName.contains("airpods pro")) return "airpods_pro";
+        if (lowerName.contains("airpods max")) return "airpods_max";
+        if (lowerName.contains("airpods")) return "airpods";
+        if (lowerName.contains("beats")) return "beats";
+
+        return "apple_audio";
+    }
+
+    /**
+     * Check if device supports case battery
+     */
+    public boolean supportsCaseBattery() {
+        String model = getDeviceModel();
+        // AirPods Max doesn't have a case, most others do
+        return !model.equals("airpods_max");
+    }
+
     @Override
     public String toString() {
         if (isAirPods()) {
-            return String.format("AirPods[%s] L:%s R:%s Case:%s Connected:%b",
+            return String.format("AppleAudio[%s] L:%s R:%s Case:%s Connected:%b",
                     deviceName, leftBattery, rightBattery, caseBattery, isConnected);
-        } else if (isGeneric()) {
-            return String.format("Generic[%s] Battery:%s Connected:%b",
-                    deviceName, singleBattery, isConnected);
         } else {
             return "Disconnected";
         }
@@ -146,8 +184,6 @@ public class BatteryData implements Parcelable {
         caseCharging = in.readByte() != 0;
         leftInEar = in.readByte() != 0;
         rightInEar = in.readByte() != 0;
-        singleBattery = in.readString();
-        singleCharging = in.readByte() != 0;
         isConnected = in.readByte() != 0;
         timestamp = in.readLong();
     }
@@ -182,8 +218,6 @@ public class BatteryData implements Parcelable {
         dest.writeByte((byte) (caseCharging ? 1 : 0));
         dest.writeByte((byte) (leftInEar ? 1 : 0));
         dest.writeByte((byte) (rightInEar ? 1 : 0));
-        dest.writeString(singleBattery);
-        dest.writeByte((byte) (singleCharging ? 1 : 0));
         dest.writeByte((byte) (isConnected ? 1 : 0));
         dest.writeLong(timestamp);
     }
