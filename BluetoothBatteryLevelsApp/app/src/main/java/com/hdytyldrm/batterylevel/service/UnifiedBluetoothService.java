@@ -602,6 +602,11 @@ public class UnifiedBluetoothService extends Service implements BatteryDetection
  * Focuses exclusively on AirPods and Beats devices
  * Removed generic Bluetooth support for Play Store compliance
  */
+/**
+ * Unified Bluetooth Service - Apple Devices Only
+ * Focuses exclusively on AirPods and Beats devices
+ * Removed generic Bluetooth support for Play Store compliance
+ */
 public class UnifiedBluetoothService extends Service implements BatteryDetectionListener {
     private static final String TAG = "UnifiedBluetoothService";
 
@@ -706,24 +711,11 @@ public class UnifiedBluetoothService extends Service implements BatteryDetection
 
     @Override
     public void onDeviceDisconnected(BluetoothDevice device) {
-        Log.d(TAG, "❌ Apple device disconnect event: " + (device != null ? device.getName() : "null"));
+        Log.d(TAG, "❌ Apple device disconnect event: " + (device != null ? device.getName() : "timeout"));
 
-        if (device == null) {
-            Log.w(TAG, "🔌 Null device disconnected. Resetting state.");
-            setDisconnectedState();
-            return;
-        }
-
-        // Check if this is our current Apple device
-        if (currentBatteryData != null && !currentBatteryData.isDisconnected()) {
-            if (isCurrentAppleDevice(device)) {
-                Log.d(TAG, "🔌 Current Apple device disconnected. Resetting state.");
-                setDisconnectedState();
-                return;
-            }
-        }
-
-        Log.w(TAG, "🔌 Disconnect event for non-tracked Apple device. Ignoring.");
+        // DÜZELTME: Her disconnect event'te state'i sıfırla
+        Log.d(TAG, "🔌 Apple device disconnected. Resetting state immediately.");
+        setDisconnectedState();
     }
 
     @Override

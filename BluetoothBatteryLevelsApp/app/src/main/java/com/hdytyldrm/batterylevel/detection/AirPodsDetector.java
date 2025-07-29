@@ -967,6 +967,7 @@ public class AirPodsDetector extends BaseDetectionStrategy {
 
             // Get device name with Apple device detection
             String deviceName = getAppleDeviceName(device);
+            Log.d(TAG, "🔍 DEBUG: Final device name for BatteryData: " + deviceName);
 
             Log.d(TAG, String.format("🎧 PARSED FINAL: %s L:%s(%s) R:%s(%s) Case:%s(%s)",
                     deviceName, leftBattery, chargeL ? "⚡" : "",
@@ -1019,34 +1020,42 @@ public class AirPodsDetector extends BaseDetectionStrategy {
     }
 
     /**
-     * Get proper Apple device name with model detection
+     * Get original Apple device name (preserve user's custom name)
+     * DÜZELTME: Kullanıcının Bluetooth ayarlarından verdiği ismi korur
      */
     private String getAppleDeviceName(BluetoothDevice device) {
-        String deviceName = device.getName();
-        if (deviceName == null || deviceName.isEmpty()) {
+        if (device == null) {
+            Log.d(TAG, "🔍 DEBUG: Device is null, returning default");
             return "Apple Audio Device";
         }
 
-        // Enhance name for specific models
-        String lowerName = deviceName.toLowerCase();
+        Log.d(TAG, "🔍 DEBUG: Getting name for device: " + device.getAddress());
 
-        // AirPods model detection
-        if (lowerName.contains("airpods")) {
-            if (lowerName.contains("pro")) return "AirPods Pro";
-            if (lowerName.contains("max")) return "AirPods Max";
-            return "AirPods";
+        // Önce alias kontrolü (kullanıcının özel adı)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            try {
+                String alias = device.getAlias();
+                Log.d(TAG, "🔍 DEBUG: Device alias: " + alias);
+                if (alias != null && !alias.isEmpty()) {
+                    Log.d(TAG, "🔍 DEBUG: Using alias: " + alias);
+                    return alias; // Kullanıcının verdiği özel isim
+                }
+            } catch (Exception e) {
+                Log.d(TAG, "🔍 DEBUG: Error getting device alias", e);
+            }
         }
 
-        // Beats model detection
-        if (lowerName.contains("beats")) {
-            if (lowerName.contains("solo")) return "Beats Solo";
-            if (lowerName.contains("studio")) return "Beats Studio";
-            if (lowerName.contains("powerbeats")) return "Powerbeats";
-            if (lowerName.contains("flex")) return "Beats Flex";
-            return "Beats";
+        // Orijinal cihaz adı
+        String deviceName = device.getName();
+        Log.d(TAG, "🔍 DEBUG: Device getName(): " + deviceName);
+
+        if (deviceName != null && !deviceName.isEmpty()) {
+            Log.d(TAG, "🔍 DEBUG: Using device name: " + deviceName);
+            return deviceName; // Orijinal cihaz adını koru
         }
 
-        return deviceName;
+        Log.d(TAG, "🔍 DEBUG: No name found, returning default");
+        return "Apple Audio Device";
     }
 
     /**
@@ -1057,7 +1066,9 @@ public class AirPodsDetector extends BaseDetectionStrategy {
 
         disconnectRunnable = () -> {
             Log.d(TAG, "🔌 Apple device beacon timeout - assuming disconnected");
-            notifyBatteryData(new BatteryData());
+            // DÜZELTME: Service'e açıkça disconnect event gönder
+            notifyDeviceDisconnected(null); // Null device ile disconnect
+            notifyBatteryData(new BatteryData()); // Boş data gönder
         };
 
         disconnectHandler.postDelayed(disconnectRunnable, DISCONNECT_TIMEOUT);

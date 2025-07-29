@@ -506,6 +506,7 @@ public class StartActivityYeni extends BaseActivity {
         }
     }
 */
+
     private void handleBatteryUpdate(BatteryData batteryData) {
         Log.d(TAG, "🔋 Handling battery update: " + (batteryData != null ? batteryData.toString() : "null"));
 
@@ -523,50 +524,52 @@ public class StartActivityYeni extends BaseActivity {
             updateUIForDisconnectedState();
         }
     }
-
     private void updateUIForDisconnectedState() {
         Log.d(TAG, "🔌 updateUIForDisconnectedState called");
 
         // Device title
         deviceTitle.setText("");
 
-        // Device image - mevcut bluetooth icon kullan
-      //  airpodsImage.setImageResource(R.drawable.bluetooth);
-
         // Show no connection section
         noConnectionSection.setVisibility(View.VISIBLE);
         batteryLevelsSection.setVisibility(View.GONE);
+
+        // Update no connection message for Apple devices
         ImageView noConnectionIcon = findViewById(R.id.noConnectionIcon);
         noConnectionIcon.setImageResource(R.drawable.ic_headphones_illustration);
 
-        Log.d(TAG, "🔌 UI updated for disconnected state - battery section HIDDEN");
-    }
+        // Optional: Update text to be Apple-specific
 
+
+        Log.d(TAG, "🔌 UI updated for disconnected state - Apple device section HIDDEN");
+    }
     private void updateUIForBluetoothDisabled() {
         deviceTitle.setText(R.string.bluetooth_disabled);
        // airpodsImage.setImageResource(R.drawable.bluetooth); // mevcut icon kullan
         noConnectionSection.setVisibility(View.VISIBLE);
         batteryLevelsSection.setVisibility(View.GONE);
     }
-
     private void updateUIForAirPods(BatteryData batteryData) {
-        Log.d(TAG, "🎧 updateUIForAirPods called with: " + batteryData.toString());
+        Log.d(TAG, "🎧 updateUIForAppleDevice called with: " + batteryData.toString());
 
-        // Device title
-        // Device title with enhanced Apple device name
-        String enhancedName = getEnhancedAppleDeviceName(batteryData.getDeviceName());
-        deviceTitle.setText(enhancedName);
-        Log.d(TAG, "📱 Device title set to: " + enhancedName);
+        // Device title - DÜZELTME: Orijinal ismi kullan, enhance etme
+        String originalName = batteryData.getDeviceName();
+        Log.d(TAG, "🔍 DEBUG: BatteryData device name: " + originalName);
 
-        // Device image
-     //   airpodsImage.setImageResource(R.drawable.airpodes);
+        if (originalName == null || originalName.isEmpty()) {
+            originalName = getString(R.string.apple_audio_device);
+            Log.d(TAG, "🔍 DEBUG: Using fallback name: " + originalName);
+        }
+
+        deviceTitle.setText(originalName);
+        Log.d(TAG, "📱 Device title set to: " + originalName);
 
         // Show battery levels section
         noConnectionSection.setVisibility(View.GONE);
-        batteryLevelsSection.setVisibility(View.VISIBLE);  // AirPods'u göster
+        batteryLevelsSection.setVisibility(View.VISIBLE);
 
-        // Show all sections for AirPods
-        showAirPodsLayout();
+        // Show all sections for Apple audio devices
+        showAppleDeviceLayout();
 
         // Update battery texts
         leftBatteryText.setText(batteryData.getLeftBattery());
@@ -581,9 +584,51 @@ public class StartActivityYeni extends BaseActivity {
         updateChargingIcon(rightBatteryIcon, batteryData.isRightCharging());
         updateChargingIcon(caseBatteryIcon, batteryData.isCaseCharging());
 
-        Log.d(TAG, "🎧 UI updated for AirPods: " + batteryData.getDeviceName());
+        Log.d(TAG, "🎧 UI updated for Apple device: " + originalName);
     }
 
+    private void showAppleDeviceLayout() {
+        leftEarbudSection.setVisibility(View.VISIBLE);
+        rightEarbudSection.setVisibility(View.VISIBLE);
+        caseSection.setVisibility(View.VISIBLE);
+
+        // Equal weight for all sections
+        resetLayoutParams(leftEarbudSection, 1.0f);
+        resetLayoutParams(rightEarbudSection, 1.0f);
+        resetLayoutParams(caseSection, 1.0f);
+    }
+
+    private String getEnhancedAppleDeviceName(String deviceName) {
+        if (deviceName == null || deviceName.isEmpty()) {
+            return "Apple Audio Device";
+        }
+
+        String lowerName = deviceName.toLowerCase();
+
+        // AirPods model enhancement
+        if (lowerName.contains("airpods")) {
+            if (lowerName.contains("pro") && lowerName.contains("2")) return "AirPods Pro (2nd gen)";
+            if (lowerName.contains("pro")) return "AirPods Pro";
+            if (lowerName.contains("max")) return "AirPods Max";
+            if (lowerName.contains("3")) return "AirPods (3rd gen)";
+            if (lowerName.contains("2")) return "AirPods (2nd gen)";
+            return "AirPods";
+        }
+
+        // Beats model enhancement
+        if (lowerName.contains("beats")) {
+            if (lowerName.contains("solo 3")) return "Beats Solo 3";
+            if (lowerName.contains("studio 3")) return "Beats Studio 3";
+            if (lowerName.contains("powerbeats pro")) return "Powerbeats Pro";
+            if (lowerName.contains("powerbeats 3")) return "Powerbeats 3";
+            if (lowerName.contains("flex")) return "Beats Flex";
+            if (lowerName.contains("solo")) return "Beats Solo";
+            if (lowerName.contains("studio")) return "Beats Studio";
+            return "Beats";
+        }
+
+        return deviceName;
+    }
 /*
     private void updateUIForGenericDevice(BatteryData batteryData) {
         // Device title
@@ -848,37 +893,5 @@ private void showAboutBottomSheet() {
             startActivity(new Intent(Intent.ACTION_VIEW,
                     Uri.parse("https://play.google.com/store/apps/details?id=" + getPackageName())));
         }
-    }
-
-    private String getEnhancedAppleDeviceName(String deviceName) {
-        if (deviceName == null || deviceName.isEmpty()) {
-            return "Apple Audio Device";
-        }
-
-        String lowerName = deviceName.toLowerCase();
-
-        // AirPods model enhancement
-        if (lowerName.contains("airpods")) {
-            if (lowerName.contains("pro") && lowerName.contains("2")) return "AirPods Pro (2nd gen)";
-            if (lowerName.contains("pro")) return "AirPods Pro";
-            if (lowerName.contains("max")) return "AirPods Max";
-            if (lowerName.contains("3")) return "AirPods (3rd gen)";
-            if (lowerName.contains("2")) return "AirPods (2nd gen)";
-            return "AirPods";
-        }
-
-        // Beats model enhancement
-        if (lowerName.contains("beats")) {
-            if (lowerName.contains("solo 3")) return "Beats Solo 3";
-            if (lowerName.contains("studio 3")) return "Beats Studio 3";
-            if (lowerName.contains("powerbeats pro")) return "Powerbeats Pro";
-            if (lowerName.contains("powerbeats 3")) return "Powerbeats 3";
-            if (lowerName.contains("flex")) return "Beats Flex";
-            if (lowerName.contains("solo")) return "Beats Solo";
-            if (lowerName.contains("studio")) return "Beats Studio";
-            return "Beats";
-        }
-
-        return deviceName;
     }
 }
