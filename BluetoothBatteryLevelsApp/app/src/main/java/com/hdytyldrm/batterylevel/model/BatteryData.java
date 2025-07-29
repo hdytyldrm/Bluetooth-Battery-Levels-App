@@ -3,6 +3,8 @@ package com.hdytyldrm.batterylevel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+// BatteryData.java - DÜZELTME: Orijinal cihaz ismini koru
+
 public class BatteryData implements Parcelable {
     private DeviceType deviceType;
     private String deviceName;
@@ -26,11 +28,12 @@ public class BatteryData implements Parcelable {
         this.deviceType = DeviceType.DISCONNECTED;
     }
 
-    // Apple audio device constructor (Primary constructor)
+    // Apple audio device constructor (Primary constructor) - DÜZELTME
     public BatteryData(String deviceName, String deviceAddress, String left, String right, String caseB,
                        boolean leftChg, boolean rightChg, boolean caseChg, boolean leftInEar, boolean rightInEar) {
         this.deviceType = DeviceType.AIRPODS; // All Apple devices use this type
-        this.deviceName = enhanceAppleDeviceName(deviceName);
+        // DÜZELTME: Orijinal ismi koru, enhance etme!
+        this.deviceName = deviceName; // enhanceAppleDeviceName(deviceName) KALDIRILD!
         this.deviceAddress = deviceAddress;
         this.leftBattery = left;
         this.rightBattery = right;
@@ -49,7 +52,8 @@ public class BatteryData implements Parcelable {
     public void setDeviceType(DeviceType deviceType) { this.deviceType = deviceType; }
 
     public String getDeviceName() { return deviceName; }
-    public void setDeviceName(String deviceName) { this.deviceName = enhanceAppleDeviceName(deviceName); }
+    // DÜZELTME: setDeviceName de enhance etmesin
+    public void setDeviceName(String deviceName) { this.deviceName = deviceName; }
 
     public String getDeviceAddress() { return deviceAddress; }
     public void setDeviceAddress(String deviceAddress) { this.deviceAddress = deviceAddress; }
@@ -99,9 +103,10 @@ public class BatteryData implements Parcelable {
     }
 
     /**
-     * Enhanced Apple device name detection
+     * Enhanced Apple device name detection - SADECE DISPLAY İÇİN
+     * Bu metod UI'da güzel görünüm için kullanılır, asıl ismi değiştirmez
      */
-    private String enhanceAppleDeviceName(String deviceName) {
+    public String getDisplayName() {
         if (deviceName == null || deviceName.isEmpty()) {
             return "Apple Audio Device";
         }
@@ -131,7 +136,7 @@ public class BatteryData implements Parcelable {
             return "Beats";
         }
 
-        return deviceName;
+        return deviceName; // Orijinal ismi döndür
     }
 
     /**

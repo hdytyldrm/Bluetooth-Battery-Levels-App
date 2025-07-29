@@ -711,7 +711,7 @@ public class UnifiedBluetoothService extends Service implements BatteryDetection
 
     @Override
     public void onDeviceDisconnected(BluetoothDevice device) {
-        Log.d(TAG, "❌ Apple device disconnect event: " + (device != null ? device.getName() : "timeout"));
+        Log.d(TAG, "❌ Apple device disconnect event: " + (device != null ? device.getName() : "null"));
 
         // DÜZELTME: Her disconnect event'te state'i sıfırla
         Log.d(TAG, "🔌 Apple device disconnected. Resetting state immediately.");

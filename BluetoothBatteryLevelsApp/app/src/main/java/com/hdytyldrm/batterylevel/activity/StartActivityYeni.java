@@ -506,7 +506,6 @@ public class StartActivityYeni extends BaseActivity {
         }
     }
 */
-
     private void handleBatteryUpdate(BatteryData batteryData) {
         Log.d(TAG, "🔋 Handling battery update: " + (batteryData != null ? batteryData.toString() : "null"));
 
@@ -552,24 +551,23 @@ public class StartActivityYeni extends BaseActivity {
     private void updateUIForAirPods(BatteryData batteryData) {
         Log.d(TAG, "🎧 updateUIForAppleDevice called with: " + batteryData.toString());
 
-        // Device title - DÜZELTME: Orijinal ismi kullan, enhance etme
+        // Device title - DÜZELTME: Enhanced Apple device name kullan
         String originalName = batteryData.getDeviceName();
-        Log.d(TAG, "🔍 DEBUG: BatteryData device name: " + originalName);
+        Log.d(TAG, "📱 ORIGINAL device name from BatteryData: " + originalName);
 
-        if (originalName == null || originalName.isEmpty()) {
-            originalName = getString(R.string.apple_audio_device);
-            Log.d(TAG, "🔍 DEBUG: Using fallback name: " + originalName);
-        }
+        String enhancedName = getEnhancedAppleDeviceName(originalName);
+        Log.d(TAG, "📱 ENHANCED device name: " + enhancedName);
 
-        deviceTitle.setText(originalName);
-        Log.d(TAG, "📱 Device title set to: " + originalName);
+
+        deviceTitle.setText(enhancedName);
+        Log.d(TAG, "📱 Device title set to: " + enhancedName);
 
         // Show battery levels section
         noConnectionSection.setVisibility(View.GONE);
         batteryLevelsSection.setVisibility(View.VISIBLE);
 
         // Show all sections for Apple audio devices
-        showAppleDeviceLayout();
+        showAirPodsLayout();
 
         // Update battery texts
         leftBatteryText.setText(batteryData.getLeftBattery());
@@ -584,51 +582,9 @@ public class StartActivityYeni extends BaseActivity {
         updateChargingIcon(rightBatteryIcon, batteryData.isRightCharging());
         updateChargingIcon(caseBatteryIcon, batteryData.isCaseCharging());
 
-        Log.d(TAG, "🎧 UI updated for Apple device: " + originalName);
+        Log.d(TAG, "🎧 UI updated for Apple device: " + enhancedName);
     }
 
-    private void showAppleDeviceLayout() {
-        leftEarbudSection.setVisibility(View.VISIBLE);
-        rightEarbudSection.setVisibility(View.VISIBLE);
-        caseSection.setVisibility(View.VISIBLE);
-
-        // Equal weight for all sections
-        resetLayoutParams(leftEarbudSection, 1.0f);
-        resetLayoutParams(rightEarbudSection, 1.0f);
-        resetLayoutParams(caseSection, 1.0f);
-    }
-
-    private String getEnhancedAppleDeviceName(String deviceName) {
-        if (deviceName == null || deviceName.isEmpty()) {
-            return "Apple Audio Device";
-        }
-
-        String lowerName = deviceName.toLowerCase();
-
-        // AirPods model enhancement
-        if (lowerName.contains("airpods")) {
-            if (lowerName.contains("pro") && lowerName.contains("2")) return "AirPods Pro (2nd gen)";
-            if (lowerName.contains("pro")) return "AirPods Pro";
-            if (lowerName.contains("max")) return "AirPods Max";
-            if (lowerName.contains("3")) return "AirPods (3rd gen)";
-            if (lowerName.contains("2")) return "AirPods (2nd gen)";
-            return "AirPods";
-        }
-
-        // Beats model enhancement
-        if (lowerName.contains("beats")) {
-            if (lowerName.contains("solo 3")) return "Beats Solo 3";
-            if (lowerName.contains("studio 3")) return "Beats Studio 3";
-            if (lowerName.contains("powerbeats pro")) return "Powerbeats Pro";
-            if (lowerName.contains("powerbeats 3")) return "Powerbeats 3";
-            if (lowerName.contains("flex")) return "Beats Flex";
-            if (lowerName.contains("solo")) return "Beats Solo";
-            if (lowerName.contains("studio")) return "Beats Studio";
-            return "Beats";
-        }
-
-        return deviceName;
-    }
 /*
     private void updateUIForGenericDevice(BatteryData batteryData) {
         // Device title
@@ -893,5 +849,54 @@ private void showAboutBottomSheet() {
             startActivity(new Intent(Intent.ACTION_VIEW,
                     Uri.parse("https://play.google.com/store/apps/details?id=" + getPackageName())));
         }
+    }
+    private String getEnhancedAppleDeviceName(String deviceName) {
+        if (deviceName == null || deviceName.isEmpty()) {
+            return "Apple Audio Device";
+        }
+
+        String lowerName = deviceName.toLowerCase();
+
+        // AirPods model enhancement - daha detaylı
+        if (lowerName.contains("airpods")) {
+            if (lowerName.contains("pro") && lowerName.contains("2")) return "AirPods Pro (2nd gen)";
+            if (lowerName.contains("pro") && lowerName.contains("1")) return "AirPods Pro (1st gen)";
+            if (lowerName.contains("pro")) return "AirPods Pro";
+            if (lowerName.contains("max")) return "AirPods Max";
+            if (lowerName.contains("3")) return "AirPods (3rd gen)";
+            if (lowerName.contains("2")) return "AirPods (2nd gen)";
+            if (lowerName.contains("1")) return "AirPods (1st gen)";
+            return "AirPods";
+        }
+
+        // Beats model enhancement - daha kapsamlı
+        if (lowerName.contains("beats")) {
+            // Solo serisi
+            if (lowerName.contains("solo pro")) return "Beats Solo Pro";
+            if (lowerName.contains("solo 3")) return "Beats Solo 3";
+            if (lowerName.contains("solo")) return "Beats Solo";
+
+            // Studio serisi
+            if (lowerName.contains("studio 3")) return "Beats Studio 3";
+            if (lowerName.contains("studio buds")) return "Beats Studio Buds";
+            if (lowerName.contains("studio")) return "Beats Studio";
+
+            // Powerbeats serisi
+            if (lowerName.contains("powerbeats pro")) return "Powerbeats Pro";
+            if (lowerName.contains("powerbeats 3")) return "Powerbeats 3";
+            if (lowerName.contains("powerbeats 4")) return "Powerbeats 4";
+            if (lowerName.contains("powerbeats")) return "Powerbeats";
+
+            // Diğer Beats modelleri
+            if (lowerName.contains("beatsx") || lowerName.contains("beats x")) return "BeatsX";
+            if (lowerName.contains("beats flex")) return "Beats Flex";
+            if (lowerName.contains("beats fit pro")) return "Beats Fit Pro";
+
+            // Genel Beats
+            return "Beats";
+        }
+
+        // Eğer hiçbiri match etmezse orijinal adı geri döndür
+        return deviceName;
     }
 }

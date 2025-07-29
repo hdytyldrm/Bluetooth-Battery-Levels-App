@@ -965,9 +965,8 @@ public class AirPodsDetector extends BaseDetectionStrategy {
             String rightBattery = formatBatteryLevel(rightStatus);
             String caseBattery = formatBatteryLevel(caseStatus);
 
-            // Get device name with Apple device detection
-            String deviceName = getAppleDeviceName(device);
-            Log.d(TAG, "🔍 DEBUG: Final device name for BatteryData: " + deviceName);
+            // DÜZELTME: Beacon verisinden cihaz tipini tespit et
+            String deviceName = detectDeviceTypeFromBeacon(status, device);
 
             Log.d(TAG, String.format("🎧 PARSED FINAL: %s L:%s(%s) R:%s(%s) Case:%s(%s)",
                     deviceName, leftBattery, chargeL ? "⚡" : "",
@@ -992,7 +991,6 @@ public class AirPodsDetector extends BaseDetectionStrategy {
             return null;
         }
     }
-
     private boolean isFlipped(String str) {
         return (Integer.parseInt("" + str.charAt(10), 16) & 0x02) == 0;
     }
@@ -1020,42 +1018,34 @@ public class AirPodsDetector extends BaseDetectionStrategy {
     }
 
     /**
-     * Get original Apple device name (preserve user's custom name)
-     * DÜZELTME: Kullanıcının Bluetooth ayarlarından verdiği ismi korur
+     * Get proper Apple device name with model detection
      */
     private String getAppleDeviceName(BluetoothDevice device) {
-        if (device == null) {
-            Log.d(TAG, "🔍 DEBUG: Device is null, returning default");
+        String deviceName = device.getName();
+        if (deviceName == null || deviceName.isEmpty()) {
             return "Apple Audio Device";
         }
 
-        Log.d(TAG, "🔍 DEBUG: Getting name for device: " + device.getAddress());
+        // Enhance name for specific models
+        String lowerName = deviceName.toLowerCase();
 
-        // Önce alias kontrolü (kullanıcının özel adı)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            try {
-                String alias = device.getAlias();
-                Log.d(TAG, "🔍 DEBUG: Device alias: " + alias);
-                if (alias != null && !alias.isEmpty()) {
-                    Log.d(TAG, "🔍 DEBUG: Using alias: " + alias);
-                    return alias; // Kullanıcının verdiği özel isim
-                }
-            } catch (Exception e) {
-                Log.d(TAG, "🔍 DEBUG: Error getting device alias", e);
-            }
+        // AirPods model detection
+        if (lowerName.contains("airpods")) {
+            if (lowerName.contains("pro")) return "AirPods Pro";
+            if (lowerName.contains("max")) return "AirPods Max";
+            return "AirPods";
         }
 
-        // Orijinal cihaz adı
-        String deviceName = device.getName();
-        Log.d(TAG, "🔍 DEBUG: Device getName(): " + deviceName);
-
-        if (deviceName != null && !deviceName.isEmpty()) {
-            Log.d(TAG, "🔍 DEBUG: Using device name: " + deviceName);
-            return deviceName; // Orijinal cihaz adını koru
+        // Beats model detection
+        if (lowerName.contains("beats")) {
+            if (lowerName.contains("solo")) return "Beats Solo";
+            if (lowerName.contains("studio")) return "Beats Studio";
+            if (lowerName.contains("powerbeats")) return "Powerbeats";
+            if (lowerName.contains("flex")) return "Beats Flex";
+            return "Beats";
         }
 
-        Log.d(TAG, "🔍 DEBUG: No name found, returning default");
-        return "Apple Audio Device";
+        return deviceName;
     }
 
     /**
@@ -1080,5 +1070,94 @@ public class AirPodsDetector extends BaseDetectionStrategy {
             disconnectHandler.removeCallbacks(disconnectRunnable);
             disconnectRunnable = null;
         }
+    }
+
+    /**
+     * Beacon verisinden Apple cihaz tipini tespit eder
+     */
+    private String detectDeviceTypeFromBeacon(String status, BluetoothDevice device) {
+        try {
+            // Önce Bluetooth device name'i dene
+            String bluetoothName = device.getName();
+            if (bluetoothName != null && !bluetoothName.isEmpty()) {
+                Log.d(TAG, "🎯 Bluetooth name available: " + bluetoothName);
+                return enhanceAppleDeviceName(bluetoothName);
+            }
+
+            // Beacon verisinden cihaz tipini tespit et
+            if (status.length() >= 54) {
+                // Model ID'yi çıkar (hex positions based on Apple's beacon format)
+                String modelBytes = status.substring(6, 10); // Model identifier bytes
+                Log.d(TAG, "🔍 Model bytes from beacon: " + modelBytes);
+
+                return detectModelFromBeaconBytes(modelBytes);
+            }
+
+            // Fallback: Generic Apple Audio Device
+            return "AirPods";
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error detecting device type from beacon", e);
+            return "Apple Audio Device";
+        }
+    }
+
+    /**
+     * Beacon byte'larından model tespit et
+     */
+    private String detectModelFromBeaconBytes(String modelBytes) {
+        // Apple'ın bilinen model ID'leri (hex format)
+        switch (modelBytes.toUpperCase()) {
+            case "0220": return "AirPods (1st gen)";
+            case "0F20": return "AirPods (2nd gen)";
+            case "1320": return "AirPods (3rd gen)";
+            case "0E20": return "AirPods Pro (1st gen)";
+            case "1420": return "AirPods Pro (2nd gen)";
+            case "0A20": return "AirPods Max";
+
+            // Beats models
+            case "1020": return "Powerbeats Pro";
+            case "0B20": return "Powerbeats 3";
+            case "0520": return "BeatsX";
+            case "1820": return "Beats Flex";
+            case "0620": return "Beats Solo 3";
+            case "1720": return "Beats Studio 3";
+
+            default:
+                Log.d(TAG, "🔍 Unknown model bytes: " + modelBytes + " - defaulting to AirPods");
+                return "AirPods";
+        }
+    }
+
+    /**
+     * Apple cihaz adını geliştirir
+     */
+    private String enhanceAppleDeviceName(String deviceName) {
+        if (deviceName == null || deviceName.isEmpty()) {
+            return "Apple Audio Device";
+        }
+
+        String lowerName = deviceName.toLowerCase();
+
+        // AirPods model detection
+        if (lowerName.contains("airpods")) {
+            if (lowerName.contains("pro") && lowerName.contains("2")) return "AirPods Pro (2nd gen)";
+            if (lowerName.contains("pro")) return "AirPods Pro";
+            if (lowerName.contains("max")) return "AirPods Max";
+            if (lowerName.contains("3")) return "AirPods (3rd gen)";
+            if (lowerName.contains("2")) return "AirPods (2nd gen)";
+            return "AirPods";
+        }
+
+        // Beats model detection
+        if (lowerName.contains("beats")) {
+            if (lowerName.contains("solo")) return "Beats Solo";
+            if (lowerName.contains("studio")) return "Beats Studio";
+            if (lowerName.contains("powerbeats")) return "Powerbeats";
+            if (lowerName.contains("flex")) return "Beats Flex";
+            return "Beats";
+        }
+
+        return deviceName;
     }
 }
