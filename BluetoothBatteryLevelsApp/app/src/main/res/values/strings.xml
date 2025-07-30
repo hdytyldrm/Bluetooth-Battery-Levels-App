@@ -116,7 +116,7 @@
 </resources>
 -->
 <resources>
-    <string name="app_name">Apple Audio Battery</string>
+    <string name="app_name">AirBattery</string>
 
     <string name="applovin_sdk_key">applovin_sdk_key</string>
 
