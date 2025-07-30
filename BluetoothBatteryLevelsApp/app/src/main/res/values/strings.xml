@@ -301,4 +301,7 @@
     <string name="powerbeats_pro_full">Powerbeats Pro</string>
     <string name="beatsx">BeatsX</string>
     <string name="beats_fit_pro">Beats Fit Pro</string>
+
+    <string name="loading_features">Features Loading...</string>
+
 </resources>
