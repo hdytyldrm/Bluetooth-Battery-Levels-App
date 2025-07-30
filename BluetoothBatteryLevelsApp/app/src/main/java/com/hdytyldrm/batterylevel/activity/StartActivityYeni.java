@@ -90,6 +90,20 @@ public class StartActivityYeni extends BaseActivity {
     private FrameLayout adContainer;
 
     private UnifiedInterstitialAdManager adManager;
+    private boolean isNotificationEnabled = false;
+    private static final String PREFS_NAME = "battery_monitor_prefs";
+    private static final String KEY_NOTIFICATION_ENABLED = "notification_enabled";
+    private boolean wasBluetoothDisabled = false;
+    private BroadcastReceiver bluetoothStateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
+                int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+                handleBluetoothStateChange(state);
+            }
+        }
+    };
     // Service communication
     private BroadcastReceiver batteryUpdateReceiver = new BroadcastReceiver() {
         @Override
@@ -119,36 +133,38 @@ public class StartActivityYeni extends BaseActivity {
 
         setContentView(R.layout.activity_start_sekiz);
 
-        Log.d(TAG, "🚀 StartActivityYeni initializing...");
-
-        // Initialize UI components manually
         initializeViews();
         adManager = UnifiedInterstitialAdManager.getInstance(this);
         initializeComponents();
         setupPermissions();
         setupUI();
-        updateBottomNavSelection(true); // Başlangıçta Ana Sayfa'yı aktif yap
 
+        // ÖNCE preference'ı yükle
+        loadNotificationPreference();
+        registerBluetoothStateReceiver();
+
+        updateBottomNavSelection(true);
         loadBannerAd();
 
-        // DEBUGGING: Service durumunu kontrol et
+        // Service debugging
         new Handler().postDelayed(() -> {
             ServiceDebugHelper.fullDebugReport(this);
-            // YENI: Service'den son durumu iste
             requestCurrentBatteryStatus();
         }, 1000);
 
         // Permissions kontrolü
         if (checkAllPermissions()) {
             initializeBluetooth();
-            // Service'i otomatik başlat
-            Log.d(TAG, "🔧 Auto-starting service for testing...");
-            startMonitoringService();
+            // Service'i otomatik başlat (notification preference'a göre)
+            if (isNotificationEnabled) {
+                startMonitoringServiceWithNotification();
+            } else {
+                startServiceWithoutNotification();
+            }
         } else {
             requestRequiredPermissions();
         }
 
-        Log.d(TAG, "✅ StartActivityYeni initialized");
     }
 
     // Initialize all views manually (since no data binding)
@@ -224,6 +240,8 @@ public class StartActivityYeni extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "🛑 Activity destroyed");
+        unregisterBluetoothStateReceiver(); // Receiver'ı unregister et
+
     }
 
     // ===== INITIALIZATION =====
@@ -271,7 +289,7 @@ public class StartActivityYeni extends BaseActivity {
         updateUIForDisconnectedState();
 
         // Notification switch
-        notificationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+       /* notificationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 if (checkAllPermissions()) {
                     startMonitoringService();
@@ -281,6 +299,22 @@ public class StartActivityYeni extends BaseActivity {
                 }
             } else {
                 stopMonitoringService();
+            }
+        });*/
+        notificationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                if (checkAllPermissions()) {
+                    // Service'i başlat ve notification'ı etkinleştir
+                    startMonitoringServiceWithNotification();
+                    saveNotificationPreference(true);
+                } else {
+                    notificationSwitch.setChecked(false);
+                    requestRequiredPermissions();
+                }
+            } else {
+                // Service çalışmaya devam etsin ama notification'ı kapat
+                disableNotificationOnly();
+                saveNotificationPreference(false);
             }
         });
 
@@ -418,7 +452,6 @@ public class StartActivityYeni extends BaseActivity {
     }
 
     // ===== BLUETOOTH MANAGEMENT =====
-
     private void initializeBluetooth() {
         if (bluetoothAdapter == null) {
             Log.w(TAG, "⚠️ Bluetooth not supported");
@@ -428,16 +461,14 @@ public class StartActivityYeni extends BaseActivity {
 
         if (!bluetoothAdapter.isEnabled()) {
             Log.w(TAG, "⚠️ Bluetooth not enabled");
-            updateUIForBluetoothDisabled();
+            wasBluetoothDisabled = true; // Flag'i set et
+            updateUIForDisconnectedState();
             return;
         }
 
         Log.d(TAG, "✅ Bluetooth is available and enabled");
-
-        // Service'i başlat (eğer daha önce başlatılmışsa)
         checkServiceStatus();
     }
-
     private void requestBluetoothEnable() {
         Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
         startActivityForResult(enableBtIntent, 100);
@@ -509,7 +540,21 @@ public class StartActivityYeni extends BaseActivity {
     private void handleBatteryUpdate(BatteryData batteryData) {
         Log.d(TAG, "🔋 Handling battery update: " + (batteryData != null ? batteryData.toString() : "null"));
 
-        if (batteryData == null || batteryData.isDisconnected() || !batteryData.isConnected()) {
+        if (batteryData == null) {
+            Log.d(TAG, "📱 UI: Null battery data - showing disconnected");
+            updateUIForDisconnectedState();
+            return;
+        }
+
+        // Bluetooth kapalı kontrolü - SADECE UI güncelle, snackbar handleBluetoothStateChange'de
+        if (batteryData.isBluetoothDisabled()) {
+            Log.d(TAG, "📴 UI: Bluetooth disabled state");
+            updateUIForDisconnectedState();
+            return;
+        }
+
+        // Normal bağlantı durumu kontrolü
+        if (batteryData.isDisconnected() || !batteryData.isConnected()) {
             Log.d(TAG, "📱 UI: No Apple device connected");
             currentBatteryData = new BatteryData();
             updateUIForDisconnectedState();
@@ -523,6 +568,7 @@ public class StartActivityYeni extends BaseActivity {
             updateUIForDisconnectedState();
         }
     }
+    // StartActivityYeni.java - handleBatteryUpdate metodunu güncelleyin:
     private void updateUIForDisconnectedState() {
         Log.d(TAG, "🔌 updateUIForDisconnectedState called");
 
@@ -530,8 +576,9 @@ public class StartActivityYeni extends BaseActivity {
         deviceTitle.setText("");
 
         // Show no connection section
-        noConnectionSection.setVisibility(View.VISIBLE);
         batteryLevelsSection.setVisibility(View.GONE);
+
+        noConnectionSection.setVisibility(View.VISIBLE);
 
         // Update no connection message for Apple devices
         ImageView noConnectionIcon = findViewById(R.id.noConnectionIcon);
@@ -541,12 +588,6 @@ public class StartActivityYeni extends BaseActivity {
 
 
         Log.d(TAG, "🔌 UI updated for disconnected state - Apple device section HIDDEN");
-    }
-    private void updateUIForBluetoothDisabled() {
-        deviceTitle.setText(R.string.bluetooth_disabled);
-       // airpodsImage.setImageResource(R.drawable.bluetooth); // mevcut icon kullan
-        noConnectionSection.setVisibility(View.VISIBLE);
-        batteryLevelsSection.setVisibility(View.GONE);
     }
     private void updateUIForAirPods(BatteryData batteryData) {
         Log.d(TAG, "🎧 updateUIForAppleDevice called with: " + batteryData.toString());
@@ -729,7 +770,7 @@ public class StartActivityYeni extends BaseActivity {
 
 
 
-    private void checkServiceStatus() {
+    /*private void checkServiceStatus() {
         // Service çalışıyor mu kontrol et
         isServiceRunning = isServiceRunning(UnifiedBluetoothService.class);
         updateServiceUI(isServiceRunning);
@@ -737,6 +778,21 @@ public class StartActivityYeni extends BaseActivity {
         if (isServiceRunning) {
             // Service çalışıyorsa mevcut durumu iste
             requestCurrentBatteryStatus();
+        }
+    }*/
+    private void checkServiceStatus() {
+        // Service çalışıyor mu kontrol et ama switch'i otomatik değiştirme
+        isServiceRunning = isServiceRunning(UnifiedBluetoothService.class);
+
+        // Switch durumunu preference'tan al
+        loadNotificationPreference();
+
+        if (isServiceRunning) {
+            // Service çalışıyorsa mevcut durumu iste
+            requestCurrentBatteryStatus();
+        } else {
+            // Service çalışmıyorsa başlat (notification kapalı olarak)
+            startServiceWithoutNotification();
         }
     }
 
@@ -898,5 +954,128 @@ private void showAboutBottomSheet() {
 
         // Eğer hiçbiri match etmezse orijinal adı geri döndür
         return deviceName;
+    }
+
+    private void loadNotificationPreference() {
+        android.content.SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        isNotificationEnabled = prefs.getBoolean(KEY_NOTIFICATION_ENABLED, false);
+        notificationSwitch.setChecked(isNotificationEnabled);
+    }
+    private void saveNotificationPreference(boolean enabled) {
+        android.content.SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        prefs.edit().putBoolean(KEY_NOTIFICATION_ENABLED, enabled).apply();
+        isNotificationEnabled = enabled;
+    }
+
+    private void startMonitoringServiceWithNotification() {
+        try {
+            Intent serviceIntent = new Intent(this, UnifiedBluetoothService.class);
+            serviceIntent.putExtra("ENABLE_NOTIFICATION", true);
+            startForegroundService(serviceIntent);
+
+            isServiceRunning = true;
+            isNotificationEnabled = true;
+            updateServiceUI(true);
+
+            Log.d(TAG, "✅ Monitoring service started WITH notification");
+            showToast("Battery monitoring started");
+
+        } catch (Exception e) {
+            Log.e(TAG, "❌ Error starting service with notification", e);
+            notificationSwitch.setChecked(false);
+            showToast("Error starting monitoring service");
+        }
+    }
+    private void disableNotificationOnly() {
+        try {
+            // Service'e notification'ı kapat diye bildir
+            Intent serviceIntent = new Intent(this, UnifiedBluetoothService.class);
+            serviceIntent.putExtra("ENABLE_NOTIFICATION", false);
+            startForegroundService(serviceIntent);
+
+            isNotificationEnabled = false;
+            updateServiceUI(false);
+
+            Log.d(TAG, "📴 Notification disabled, service continues");
+            showToast("Notification disabled");
+
+        } catch (Exception e) {
+            Log.e(TAG, "❌ Error disabling notification", e);
+            showToast("Error disabling notification");
+        }
+    }
+    private void startServiceWithoutNotification() {
+        try {
+            Intent serviceIntent = new Intent(this, UnifiedBluetoothService.class);
+            serviceIntent.putExtra("ENABLE_NOTIFICATION", false);
+            startForegroundService(serviceIntent);
+
+            isServiceRunning = true;
+            Log.d(TAG, "✅ Service started WITHOUT notification");
+
+            // Switch durumunu değiştirme, preference'taki değeri koru
+
+        } catch (Exception e) {
+            Log.e(TAG, "❌ Error starting service without notification", e);
+        }
+    }
+
+    private void showBluetoothDisabledSnackbar() {
+        com.google.android.material.snackbar.Snackbar.make(
+                findViewById(android.R.id.content),
+                "Bluetooth is disabled. Please enable Bluetooth to monitor battery levels.",
+                com.google.android.material.snackbar.Snackbar.LENGTH_LONG
+        ).setAction("Enable", v -> {
+            // Bluetooth ayarlarına git
+            Intent bluetoothSettings = new Intent(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS);
+            startActivity(bluetoothSettings);
+        }).show();
+    }
+    private void showBluetoothEnabledSnackbar() {
+        com.google.android.material.snackbar.Snackbar.make(
+                findViewById(android.R.id.content),
+                "✅ Bluetooth enabled! Searching for Apple audio devices...",
+                com.google.android.material.snackbar.Snackbar.LENGTH_SHORT
+        ).show();
+    }
+
+    private void registerBluetoothStateReceiver() {
+        IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(bluetoothStateReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(bluetoothStateReceiver, filter);
+        }
+        Log.d(TAG, "✅ Bluetooth state receiver registered");
+    }
+
+    private void unregisterBluetoothStateReceiver() {
+        try {
+            if (bluetoothStateReceiver != null) {
+                unregisterReceiver(bluetoothStateReceiver);
+                Log.d(TAG, "✅ Bluetooth state receiver unregistered");
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error unregistering bluetooth state receiver", e);
+        }
+    }
+
+    private void handleBluetoothStateChange(int state) {
+        switch (state) {
+            case BluetoothAdapter.STATE_OFF:
+            case BluetoothAdapter.STATE_TURNING_OFF:
+                Log.d(TAG, "📴 Bluetooth turning off");
+                showBluetoothDisabledSnackbar();
+                wasBluetoothDisabled = true;
+                break;
+
+            case BluetoothAdapter.STATE_ON:
+                Log.d(TAG, "📶 Bluetooth turned on");
+                if (wasBluetoothDisabled) {
+                    showBluetoothEnabledSnackbar();
+                    wasBluetoothDisabled = false;
+                }
+                break;
+        }
     }
 }

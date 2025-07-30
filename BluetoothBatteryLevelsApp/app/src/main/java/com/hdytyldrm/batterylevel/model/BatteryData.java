@@ -22,6 +22,8 @@ public class BatteryData implements Parcelable {
 
     private boolean isConnected = false;
     private long timestamp = System.currentTimeMillis();
+    private boolean isBluetoothDisabled = false;
+
 
     // Constructors
     public BatteryData() {
@@ -225,5 +227,12 @@ public class BatteryData implements Parcelable {
         dest.writeByte((byte) (rightInEar ? 1 : 0));
         dest.writeByte((byte) (isConnected ? 1 : 0));
         dest.writeLong(timestamp);
+    }
+    public boolean isBluetoothDisabled() {
+        return isBluetoothDisabled;
+    }
+
+    public void setBluetoothDisabled(boolean bluetoothDisabled) {
+        isBluetoothDisabled = bluetoothDisabled;
     }
 }

@@ -631,6 +631,8 @@ public class UnifiedBluetoothService extends Service implements BatteryDetection
     private BluetoothAdapter bluetoothAdapter;
     private BroadcastReceiver systemReceiver;
     private BroadcastReceiver debugReceiver;
+    private boolean isNotificationEnabled = true; // Varsayılan true
+
 
     @Override
     public void onCreate() {
@@ -643,6 +645,8 @@ public class UnifiedBluetoothService extends Service implements BatteryDetection
             createNotificationChannel();
             startForegroundWithInitialNotification();
             Log.d(TAG, "✅ Service promoted to foreground.");
+            // ÖNCE minimal notification ile foreground'a geç
+            startForegroundWithMinimalNotification();
 
             // STEP 2: Initialize components safely
             initializeComponents();
@@ -662,7 +666,20 @@ public class UnifiedBluetoothService extends Service implements BatteryDetection
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "🔄 Service onStartCommand called");
 
-        // Ensure AirPods detection is active
+        Log.d(TAG, "🔄 Service onStartCommand called");
+
+        // Notification durumunu kontrol et
+        // Notification durumunu kontrol et
+        if (intent != null && intent.hasExtra("ENABLE_NOTIFICATION")) {
+            boolean enableNotification = intent.getBooleanExtra("ENABLE_NOTIFICATION", true);
+            isNotificationEnabled = enableNotification;
+            Log.d(TAG, "📱 Notification enabled: " + isNotificationEnabled);
+
+            // Notification'ı güncelle
+            updateNotificationVisibility();
+        }
+
+        // Dedektörlerin aktif olduğundan emin ol
         if (airPodsDetector == null || !airPodsDetector.isActive()) {
             startAppleDeviceDetection();
         }
@@ -698,9 +715,19 @@ public class UnifiedBluetoothService extends Service implements BatteryDetection
         }
 
         currentBatteryData = batteryData;
+
+        // UI'ı HER ZAMAN güncelle (notification durumuna bakma)
         broadcastBatteryUpdate(batteryData);
-        updateNotification(batteryData);
+
+        // Widget'ı HER ZAMAN güncelle
         broadcastUpdateToWidgets(batteryData);
+
+        // Notification'ı sadece enabled ise güncelle
+        if (isNotificationEnabled) {
+            updateNotification(batteryData);
+        }
+
+        Log.d(TAG, "🔋 Battery data processed - UI and widgets updated");
     }
 
     @Override
@@ -715,7 +742,7 @@ public class UnifiedBluetoothService extends Service implements BatteryDetection
 
         // DÜZELTME: Her disconnect event'te state'i sıfırla
         Log.d(TAG, "🔌 Apple device disconnected. Resetting state immediately.");
-        setDisconnectedState();
+        setDisconnectedState(); // Bu metod artık UI'ı her zaman güncelleyecek
     }
 
     @Override
@@ -816,11 +843,21 @@ public class UnifiedBluetoothService extends Service implements BatteryDetection
             case BluetoothAdapter.STATE_TURNING_OFF:
                 Log.d(TAG, "📴 Bluetooth turning off");
                 stopAppleDeviceDetection();
-                setDisconnectedState();
+                currentBatteryData = new BatteryData();
+                currentBatteryData.setBluetoothDisabled(true); // Bu metodu BatteryData'ya eklemeniz gerekebilir
+               // setDisconnectedState();
+                broadcastBatteryUpdate(currentBatteryData);
+                broadcastUpdateToWidgets(currentBatteryData);
+
+                if (isNotificationEnabled) {
+                    updateNotification(currentBatteryData);
+                }
                 break;
             case BluetoothAdapter.STATE_ON:
                 Log.d(TAG, "📶 Bluetooth turned on");
                 startAppleDeviceDetection();
+                // Normal disconnected state'e dön
+                setDisconnectedState();
                 break;
         }
     }
@@ -830,9 +867,18 @@ public class UnifiedBluetoothService extends Service implements BatteryDetection
         currentConnectedDevice = null;
         currentBatteryData = new BatteryData();
 
+        // UI'ı HER ZAMAN güncelle (notification durumuna bakma)
         broadcastBatteryUpdate(currentBatteryData);
-        updateNotification(currentBatteryData);
+
+        // Widget'ı HER ZAMAN güncelle
         broadcastUpdateToWidgets(currentBatteryData);
+
+        // Notification'ı sadece enabled ise güncelle
+        if (isNotificationEnabled) {
+            updateNotification(currentBatteryData);
+        }
+
+        Log.d(TAG, "📴 Disconnected state set - UI and widgets updated");
     }
 
     /**
@@ -947,18 +993,57 @@ public class UnifiedBluetoothService extends Service implements BatteryDetection
         }
     }
 
-    private void startForegroundWithInitialNotification() {
+   /* private void startForegroundWithInitialNotification() {
         Notification notification = createNotification(new BatteryData());
         startForeground(NOTIFICATION_ID, notification);
-    }
+    }*/
+   private void startForegroundWithInitialNotification() {
+       if (isNotificationEnabled) {
+           Notification notification = createNotification(new BatteryData());
+           startForeground(NOTIFICATION_ID, notification);
+           Log.d(TAG, "📱 Started foreground with initial notification");
+       } else {
+           // Gizli bir minimal notification ile foreground'a geç
+           Notification minimalNotification = createMinimalNotification();
+           startForeground(NOTIFICATION_ID, minimalNotification);
+           // Hemen notification'ı gizle
+           stopForeground(true);
+           Log.d(TAG, "📴 Started foreground then immediately hid notification");
+       }
+   }
+    private Notification createMinimalNotification() {
+        Intent mainIntent = new Intent(this, StartActivityYeni.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                this, 0, mainIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
 
-    private void updateNotification(BatteryData batteryData) {
+        return new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_stat_bluetooth)
+                .setContentTitle("Battery Monitor")
+                .setContentText("Running in background")
+                .setContentIntent(pendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_MIN)
+                .setOngoing(true)
+                .build();
+    }
+   /* private void updateNotification(BatteryData batteryData) {
         if (notificationManager != null) {
             Notification notification = createNotification(batteryData);
             notificationManager.notify(NOTIFICATION_ID, notification);
         }
-    }
+    }*/
+   private void updateNotification(BatteryData batteryData) {
+       if (!isNotificationEnabled) {
+           Log.d(TAG, "📴 Notification disabled, keeping minimal notification");
+           return;
+       }
 
+       if (notificationManager != null) {
+           Notification notification = createNotification(batteryData);
+           notificationManager.notify(NOTIFICATION_ID, notification);
+           Log.d(TAG, "📱 Battery notification updated");
+       }
+   }
     private Notification createNotification(BatteryData batteryData) {
         Intent mainIntent = new Intent(this, StartActivityYeni.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(
@@ -1019,5 +1104,43 @@ public class UnifiedBluetoothService extends Service implements BatteryDetection
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    private void updateNotificationVisibility() {
+        if (isNotificationEnabled) {
+            // Notification'ı göster/güncelle
+            if (currentBatteryData != null) {
+                updateNotification(currentBatteryData);
+            } else {
+                // Varsayılan notification göster
+                Notification notification = createNotification(new BatteryData());
+                if (notificationManager != null) {
+                    notificationManager.notify(NOTIFICATION_ID, notification);
+                }
+            }
+            Log.d(TAG, "📱 Notification enabled and updated");
+        } else {
+            // Minimal notification'a geri dön
+            Notification minimalNotification = createMinimalNotification();
+            if (notificationManager != null) {
+                notificationManager.notify(NOTIFICATION_ID, minimalNotification);
+            }
+            Log.d(TAG, "📱 Switched to minimal notification");
+        }
+    }
+
+    private void hideNotification() {
+        if (notificationManager != null) {
+            // Foreground service'ten çık ama service'i durdurma
+            stopForeground(true);
+            Log.d(TAG, "📴 Notification hidden via stopForeground");
+        }
+    }
+
+    private void startForegroundWithMinimalNotification() {
+        // Her durumda minimal notification ile foreground'a geç
+        Notification minimalNotification = createMinimalNotification();
+        startForeground(NOTIFICATION_ID, minimalNotification);
+        Log.d(TAG, "📱 Started foreground with minimal notification");
     }
 }
