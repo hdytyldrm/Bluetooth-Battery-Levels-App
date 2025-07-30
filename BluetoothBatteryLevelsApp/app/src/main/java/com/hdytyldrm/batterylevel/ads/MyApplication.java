@@ -338,13 +338,13 @@ import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.appopen.AppOpenAd;
+import com.hdytyldrm.batterylevel.utils.PreferenceManager;
+
 import java.util.Date;
 
 public class MyApplication extends Application implements Application.ActivityLifecycleCallbacks, LifecycleObserver {
 
-    public static SharedPreferences sharedPreferencesInApp;
-    public static SharedPreferences.Editor editorInApp;
-
+    private static PreferenceManager preferenceManager;
     private AppOpenAdManager appOpenAdManager;
     private Activity currentActivity;
 
@@ -353,13 +353,14 @@ public class MyApplication extends Application implements Application.ActivityLi
         super.onCreate();
         this.registerActivityLifecycleCallbacks(this);
 
-        sharedPreferencesInApp = getSharedPreferences("my_app_prefs", MODE_PRIVATE);
-        editorInApp = sharedPreferencesInApp.edit();
+        // Senin PreferenceManager'ını kullan
+        preferenceManager =new PreferenceManager(this,PreferenceManager.Settings.FILE);
 
-        MobileAds.initialize(this, initializationStatus -> Log.d("MyApplication", "AdMob SDK'sı başlatıldı."));
+        MobileAds.initialize(this, initializationStatus -> Log.d("MyApplication", "AdMob SDK başlatıldı."));
 
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
-        appOpenAdManager = new AppOpenAdManager();
+        appOpenAdManager = AppOpenAdManager.getInstance(this);
+        appOpenAdManager.loadAd();
     }
 
     @Override
@@ -374,137 +375,40 @@ public class MyApplication extends Application implements Application.ActivityLi
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     protected void onMoveToForeground() {
-        if (currentActivity != null) {
-            appOpenAdManager.showAdIfAvailable(currentActivity);
+        if (currentActivity != null && appOpenAdManager != null) {
+            if (appOpenAdManager.shouldShowAdBasedOnFrequency()) {
+                appOpenAdManager.showAdIfAvailable(currentActivity, () -> {
+                    Log.d("MyApplication", "App Open Ad completed");
+                });
+            }
         }
     }
 
-    // SharedPreferences Metotları
+    // PreferenceManager metodları
     public static void setuser_onetime(Integer user_onetime) {
-        if (editorInApp != null) {
-            editorInApp.putInt("user_onetime", user_onetime).apply();
+        if (preferenceManager != null) {
+            preferenceManager.editInt("user_onetime", user_onetime);
         }
     }
+
     public static Integer getuser_onetime() {
-        if (sharedPreferencesInApp != null) {
-            return sharedPreferencesInApp.getInt("user_onetime", 0);
+        if (preferenceManager != null) {
+            return preferenceManager.getInt("user_onetime", 0);
         }
         return 0;
-    }
-
-
-    /**
-     * AppOpenAd (Açılış Reklamı) yöneticisi iç sınıfı
-     */
-    public static class AppOpenAdManager {
-        private static final String LOG_TAG = "AppOpenAdManager";
-        private AppOpenAd appOpenAd = null;
-        private boolean isLoadingAd = false;
-        private boolean isShowingAd = false;
-        private long loadTime = 0;
-
-        public interface OnShowAdCompleteListener {
-            void onShowAdComplete();
-        }
-
-        public AppOpenAdManager() {
-            // Constructor
-        }
-
-        private void loadAd(Context context) {
-            if (isLoadingAd || isAdAvailable()) {
-                return;
-            }
-            isLoadingAd = true;
-            AdRequest request = new AdRequest.Builder().build();
-            AppOpenAd.load(
-                    context, AdsUnit.APP_OPEN, request,
-                    new AppOpenAd.AppOpenAdLoadCallback() {
-                        @Override
-                        public void onAdLoaded(@NonNull AppOpenAd ad) {
-                            appOpenAd = ad;
-                            isLoadingAd = false;
-                            loadTime = (new Date()).getTime();
-                            Log.d(LOG_TAG, "Açılış reklamı yüklendi.");
-                        }
-                        @Override
-                        public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                            appOpenAd = null;
-                            isLoadingAd = false;
-                            Log.d(LOG_TAG, "Açılış reklamı yüklenemedi: " + loadAdError.getMessage());
-                        }
-                    });
-        }
-
-        private boolean isAdAvailable() {
-            long dateDifference = (new Date()).getTime() - loadTime;
-            long fourHoursInMillis = 3600 * 4 * 1000;
-            return appOpenAd != null && (dateDifference < fourHoursInMillis);
-        }
-
-        // Bu metot, uygulama arkaplandan öne geldiğinde otomatik çalışır.
-        private void showAdIfAvailable(@NonNull final Activity activity) {
-            showAdIfAvailable(activity, () -> {}); // Boş bir callback ile çağır
-        }
-
-        // Bu metot, SplashActivity gibi özel durumlar için kullanılır.
-        public void showAdIfAvailable(
-                @NonNull final Activity activity,
-                @NonNull OnShowAdCompleteListener onShowAdCompleteListener) {
-
-            if (isShowingAd) {
-                Log.d(LOG_TAG, "Başka bir reklam zaten gösteriliyor.");
-                // Eğer reklam gösteriliyorsa, callback'i çalıştırmadan dönmek daha mantıklı olabilir
-                // Ancak Splash'in takılı kalmaması için şimdilik devam etsin.
-                onShowAdCompleteListener.onShowAdComplete();
-                return;
-            }
-
-            if (!isAdAvailable()) {
-                Log.d(LOG_TAG, "Kullanılabilir bir reklam yok. Sonraki ekrana devam ediliyor.");
-                onShowAdCompleteListener.onShowAdComplete();
-                loadAd(activity); // Arkaplanda bir sonraki için yükle
-                return;
-            }
-
-            appOpenAd.setFullScreenContentCallback(
-                    new FullScreenContentCallback() {
-                        @Override
-                        public void onAdDismissedFullScreenContent() {
-                            appOpenAd = null;
-                            isShowingAd = false;
-                            onShowAdCompleteListener.onShowAdComplete();
-                            loadAd(activity);
-                        }
-
-                        @Override
-                        public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
-                            appOpenAd = null;
-                            isShowingAd = false;
-                            onShowAdCompleteListener.onShowAdComplete();
-                            loadAd(activity);
-                        }
-
-                        @Override
-                        public void onAdShowedFullScreenContent() {
-                            // Reklam gösterildi
-                        }
-                    });
-
-            isShowingAd = true;
-            appOpenAd.show(activity);
-        }
     }
 
     // ActivityLifecycleCallbacks metotları
     @Override
     public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {}
+
     @Override
     public void onActivityStarted(@NonNull Activity activity) {
-        if (!appOpenAdManager.isShowingAd) {
+        if (appOpenAdManager != null && !appOpenAdManager.isShowingAd()) {
             currentActivity = activity;
         }
     }
+
     @Override
     public void onActivityResumed(@NonNull Activity activity) {}
     @Override

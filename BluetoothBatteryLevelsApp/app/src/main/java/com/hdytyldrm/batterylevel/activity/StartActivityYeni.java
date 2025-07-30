@@ -321,7 +321,8 @@ public class StartActivityYeni extends BaseActivity {
         // Bluetooth FAB
         bluetoothFab.setOnClickListener(v -> {
             if (bluetoothAdapter == null) {
-                showToast("Bluetooth not supported on this device");
+              //  showToast("Bluetooth not supported on this device");
+                showToast(getString(R.string.toast_battery_monitoring_stopped));
                 return;
             }
 
@@ -997,7 +998,8 @@ private void showAboutBottomSheet() {
             updateServiceUI(false);
 
             Log.d(TAG, "📴 Notification disabled, service continues");
-            showToast("Notification disabled");
+            //showToast("Notification disabled");
+            showToast(getString(R.string.toast_notification_disabled));
 
         } catch (Exception e) {
             Log.e(TAG, "❌ Error disabling notification", e);
@@ -1023,7 +1025,7 @@ private void showAboutBottomSheet() {
     private void showBluetoothDisabledSnackbar() {
         com.google.android.material.snackbar.Snackbar.make(
                 findViewById(android.R.id.content),
-                "Bluetooth is disabled. Please enable Bluetooth to monitor battery levels.",
+                getString(R.string.snackbar_bluetooth_disabled_message),
                 com.google.android.material.snackbar.Snackbar.LENGTH_LONG
         ).setAction("Enable", v -> {
             // Bluetooth ayarlarına git
@@ -1034,7 +1036,7 @@ private void showAboutBottomSheet() {
     private void showBluetoothEnabledSnackbar() {
         com.google.android.material.snackbar.Snackbar.make(
                 findViewById(android.R.id.content),
-                "✅ Bluetooth enabled! Searching for Apple audio devices...",
+                getString(R.string.snackbar_bluetooth_enabled_message),
                 com.google.android.material.snackbar.Snackbar.LENGTH_SHORT
         ).show();
     }

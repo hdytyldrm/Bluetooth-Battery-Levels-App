@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -22,6 +23,7 @@ import androidx.cardview.widget.CardView;
 import com.hdytyldrm.batterylevel.R;
 
 import com.hdytyldrm.batterylevel.activity.StartActivityYeni;
+import com.hdytyldrm.batterylevel.ads.AppOpenAdManager;
 import com.hdytyldrm.batterylevel.ads.MyApplication;
 
 import com.google.android.gms.ads.AdError;
@@ -204,33 +206,88 @@ public class SplashActivity extends AppCompatActivity {
 }
 */
 public class SplashActivity extends AppCompatActivity {
+    private static final String TAG = "SplashActivity";
+    private static final int SPLASH_TIMEOUT = 3000; // 3 saniye
+    private AppOpenAdManager adManager;
+    private boolean hasNavigated = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        // MyApplication'dan akıllı reklam yöneticisini al
+        setupStatusBar();
+
+        // AppOpenAdManager'ı al
         MyApplication myApplication = (MyApplication) getApplication();
+        adManager = myApplication.getAppOpenAdManager();
 
-        // Reklamı göstermeyi dene. Reklam işlemi (gösterilse de gösterilmese de)
-        // bittiğinde, "goToNextScreen" metodu otomatik olarak çağrılacak.
-        myApplication.getAppOpenAdManager().showAdIfAvailable(this, this::goToNextScreen);
-    }
-
-    private void goToNextScreen() {
-        // Bu metot, reklam işlemi tamamlandıktan sonra çağrıldığı için
-        // artık güvenle bir sonraki ekrana geçebiliriz.
-
-        if (MyApplication.getuser_onetime() == 0) {
-            // Kullanıcı koşulları daha önce kabul etmemiş, Gizlilik ekranına yönlendir.
-            startActivity(new Intent(SplashActivity.this, PrivacyTermsActivity.class));
-        } else {
-            // Kullanıcı koşulları kabul etmiş, Ana Ekrana yönlendir.
-            startActivity(new Intent(SplashActivity.this, StartActivityYeni.class));
+        // Debug bilgisi
+        if (adManager != null) {
+            adManager.printDebugInfo();
         }
 
-        // SplashActivity'yi kapat ki kullanıcı geri tuşuyla bu ekrana dönemesin.
-        finish();
+        // Minimum splash süresini bekle, sonra reklam göstermeyi dene
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            if (!hasNavigated) {
+                tryShowAdAndNavigate();
+            }
+        }, SPLASH_TIMEOUT);
     }
+
+    private void setupStatusBar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(R.color.colorlight));
+        }
+    }
+
+    private void tryShowAdAndNavigate() {
+        if (hasNavigated) {
+            Log.d(TAG, "Already navigated, skipping ad");
+            return;
+        }
+
+        if (adManager != null) {
+            Log.d(TAG, "Attempting to show App Open Ad...");
+            adManager.showAdIfAvailable(this, this::navigateToNextScreen);
+        } else {
+            Log.w(TAG, "AdManager is null, navigating directly");
+            navigateToNextScreen();
+        }
+    }
+
+    private void navigateToNextScreen() {
+        if (hasNavigated) {
+            Log.d(TAG, "Already navigated, preventing duplicate navigation");
+            return;
+        }
+
+        hasNavigated = true;
+        Log.d(TAG, "Navigating to next screen...");
+
+        Intent intent;
+        if (MyApplication.getuser_onetime() == 0) {
+            // Kullanıcı koşulları daha önce kabul etmemiş
+            intent = new Intent(this, PrivacyTermsActivity.class);
+            Log.d(TAG, "Navigating to PrivacyTermsActivity");
+        } else {
+            // Kullanıcı koşulları kabul etmiş
+            intent = new Intent(this, StartActivityYeni.class);
+            Log.d(TAG, "Navigating to StartActivityYeni");
+        }
+
+        startActivity(intent);
+        finish(); // SplashActivity'yi kapat
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "SplashActivity destroyed");
+    }
+
+
 }

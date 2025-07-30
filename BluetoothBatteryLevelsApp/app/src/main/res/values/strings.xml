@@ -274,5 +274,31 @@
     <string name="notification_channel_description">Shows battery levels of Apple audio devices</string>
     <string name="notification_no_device">No Apple Device</string>
     <string name="notification_connect_device">Connect your AirPods or Beats</string>
+    <!-- Toast messages -->
+    <string name="toast_battery_monitoring_stopped">Battery monitoring stopped</string>
+    <string name="toast_notification_disabled">Notification disabled</string>
+    <string name="toast_bluetooth_required">Bluetooth is required for battery monitoring</string>
+    <string name="toast_error_starting_service">Error starting monitoring service</string>
+    <string name="toast_error_stopping_service">Error stopping monitoring service</string>
+    <string name="toast_error_disabling_notification">Error disabling notification</string>
 
+    <!-- Snackbar messages -->
+    <string name="snackbar_bluetooth_disabled_message">Bluetooth is disabled. Please enable Bluetooth to monitor battery levels.</string>
+    <string name="snackbar_bluetooth_enabled_message">✅ Bluetooth enabled! Searching for Apple audio devices...</string>
+    <string name="snackbar_action_enable">Enable</string>
+
+    <!-- Enhanced device names -->
+    <string name="airpods_1st_gen">AirPods (1st gen)</string>
+    <string name="airpods_2nd_gen">AirPods (2nd gen)</string>
+    <string name="airpods_3rd_gen">AirPods (3rd gen)</string>
+    <string name="airpods_pro_1st_gen">AirPods Pro (1st gen)</string>
+    <string name="airpods_pro_2nd_gen">AirPods Pro (2nd gen)</string>
+    <string name="beats_solo_3">Beats Solo 3</string>
+    <string name="beats_studio_3">Beats Studio 3</string>
+    <string name="beats_studio_buds">Beats Studio Buds</string>
+    <string name="powerbeats_3">Powerbeats 3</string>
+    <string name="powerbeats_4">Powerbeats 4</string>
+    <string name="powerbeats_pro_full">Powerbeats Pro</string>
+    <string name="beatsx">BeatsX</string>
+    <string name="beats_fit_pro">Beats Fit Pro</string>
 </resources>
