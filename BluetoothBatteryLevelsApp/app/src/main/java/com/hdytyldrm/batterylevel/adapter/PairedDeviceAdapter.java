@@ -20,9 +20,6 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.hdytyldrm.batterylevel.R;
-import com.hdytyldrm.batterylevel.databinding.PairedDeviceLayoutBinding;
-import com.hdytyldrm.batterylevel.utils.Resizer;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 

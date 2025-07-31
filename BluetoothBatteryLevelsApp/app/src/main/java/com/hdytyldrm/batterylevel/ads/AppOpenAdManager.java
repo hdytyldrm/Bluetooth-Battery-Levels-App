@@ -24,7 +24,6 @@ public class AppOpenAdManager {
     private final PreferenceManager preferenceManager;
 
     // Test App Open Ad ID - Gerçek projenizde bunu değiştirin
-    private static final String APP_OPEN_AD_ID = "ca-app-pub-3940256099942544/9257395921";
 
     // PreferenceManager keys
     private static final String KEY_LOAD_TIME = "app_open_ad_load_time";
@@ -63,7 +62,7 @@ public class AppOpenAdManager {
 
         AppOpenAd.load(
                 context,
-                APP_OPEN_AD_ID,
+                AdsUnit.APP_OPEN,
                 adRequest,
                 AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT,
                 new AppOpenAd.AppOpenAdLoadCallback() {

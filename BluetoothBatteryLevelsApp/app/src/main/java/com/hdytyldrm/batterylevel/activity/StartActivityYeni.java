@@ -132,6 +132,7 @@ public class StartActivityYeni extends BaseActivity {
         EdgeToEdge.enable(this);
 
         setContentView(R.layout.activity_start_sekiz);
+        Log.d(TAG, "onCreate: ");
 
         initializeViews();
         adManager = UnifiedInterstitialAdManager.getInstance(this);
@@ -183,15 +184,11 @@ public class StartActivityYeni extends BaseActivity {
         leftBatteryText = findViewById(R.id.leftBatteryText);
         rightBatteryText = findViewById(R.id.rightBatteryText);
         caseBatteryText = findViewById(R.id.caseBatteryText);
-        notificationSettingsCard = findViewById(R.id.notificationSettingsCard);
         notificationSwitch = findViewById(R.id.notificationSwitch);
-        bottomNav = findViewById(R.id.bottomNav);
         bluetoothFab = findViewById(R.id.bluetoothFab);
         pd = findViewById(R.id.pd);
         sd = findViewById(R.id.sd);
         volume=findViewById(R.id.volume);
-        genericBatteryIcon = findViewById(R.id.genericBatteryIcon);
-        genericBatteryText = findViewById(R.id.genericBatteryText);
         infoButton = findViewById(R.id.nav_info);
         infoIcon = findViewById(R.id.nav_info_icon);
         infoText = findViewById(R.id.nav_info_text);
@@ -205,13 +202,16 @@ public class StartActivityYeni extends BaseActivity {
     private void requestCurrentBatteryStatus() {
         // Service'e mevcut durumu sorgulamak için broadcast gönder
         Intent intent = new Intent("com.hdytyldrm.batterylevel.REQUEST_BATTERY_STATUS");
-        sendBroadcast(intent);
+       // sendBroadcast(intent);
+        androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+
         Log.d(TAG, "📡 Requested current battery status from service");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(TAG, "onResume: ");
 
         // Service update receiver'ı register et
         registerBatteryUpdateReceiver();
@@ -288,19 +288,6 @@ public class StartActivityYeni extends BaseActivity {
         // Initial UI state
         updateUIForDisconnectedState();
 
-        // Notification switch
-       /* notificationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                if (checkAllPermissions()) {
-                    startMonitoringService();
-                } else {
-                    notificationSwitch.setChecked(false);
-                    requestRequiredPermissions();
-                }
-            } else {
-                stopMonitoringService();
-            }
-        });*/
         notificationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 if (checkAllPermissions()) {
@@ -349,25 +336,6 @@ public class StartActivityYeni extends BaseActivity {
         pd.setOnClickListener(v -> {
             Log.d(TAG, "🖱️ PD card clicked!");
 
-           /* if (checkAllPermissions()) {
-                Log.d(TAG, "✅ All permissions OK, launching PairedDeviceActivity_iki");
-
-                try {
-                    Intent intent = new Intent(StartActivityYeni.this, PairedDeviceActivity.class);
-                    Log.d(TAG, "🚀 Intent created: " + intent.getComponent());
-
-                    startActivity(intent);
-                    Log.d(TAG, "✅ startActivity() called successfully");
-
-                } catch (Exception e) {
-                    Log.e(TAG, "❌ Error launching PairedDeviceActivity_iki", e);
-                    showToast("Error opening paired devices: " + e.getMessage());
-                }
-
-            } else {
-                Log.d(TAG, "⚠️ Permissions missing, requesting permissions");
-                requestRequiredPermissions();
-            }*/
             adManager.incrementCounter(CounterManager.CounterType.ACTIVITY);
 
             // Adım 2: Sayaç 5'in katı mı diye kontrol et.
@@ -398,15 +366,6 @@ public class StartActivityYeni extends BaseActivity {
             public void onClick(View v) {
                 adManager.incrementCounter(CounterManager.CounterType.ACTIVITY);
 
-                /*if (checkAllPermissions()) {
-                    if (bluetoothAdapter != null && bluetoothAdapter.isEnabled()) {
-                        startActivity(new Intent(StartActivityYeni.this, SettingActivity.class));
-                    } else {
-                        requestBluetoothEnable();
-                    }
-                } else {
-                    requestRequiredPermissions();
-                }*/
                 if (adManager.shouldShowEveryNCount(CounterManager.CounterType.ACTIVITY, 3)) {
 
                     // Adım 3a: Evet, 5'in katı. Önce reklamı göster (başında yükleme ekranı ile).
@@ -515,61 +474,42 @@ public class StartActivityYeni extends BaseActivity {
     // ===== BATTERY UPDATE HANDLING =====
 
     // ===== UI UPDATE METHODS =====
-/*
-    private void handleBatteryUpdate(BatteryData batteryData) {
-        Log.d(TAG, "🔋 Handling battery update: " + (batteryData != null ? batteryData.toString() : "null"));
 
-        if (batteryData == null || batteryData.isDisconnected() || !batteryData.isConnected()) {
-            Log.d(TAG, "📱 UI: Device disconnected");
-            currentBatteryData = new BatteryData(); // Durumu sıfırla
-            updateUIForDisconnectedState();
-        } else if (batteryData.isAirPods() && batteryData.isConnected()) {
-            Log.d(TAG, "🎧 UI: AirPods connected");
-            currentBatteryData = batteryData;
-            updateUIForAirPods(batteryData);
-        } else if (batteryData.isGeneric() && batteryData.isConnected()) {
-            Log.d(TAG, "🎵 UI: Generic device connected");
-            currentBatteryData = batteryData;
-            updateUIForGenericDevice(batteryData);
-        } else {
-            Log.d(TAG, "📱 UI: Unknown state, showing disconnected");
-            currentBatteryData = new BatteryData(); // Durumu sıfırla
-            updateUIForDisconnectedState();
-        }
-    }
-*/
     private void handleBatteryUpdate(BatteryData batteryData) {
-        Log.d(TAG, "🔋 Handling battery update: " + (batteryData != null ? batteryData.toString() : "null"));
+        Log.d(TAG, "🔋 Handling UI update with data: " + (batteryData != null ? batteryData.toString() : "null"));
 
+        // --- 1. Adım: Geçersiz durumları en başta ele (Guard Clauses) ---
         if (batteryData == null) {
-            Log.d(TAG, "📱 UI: Null battery data - showing disconnected");
+            Log.d(TAG, "📱 UI: Null data received, showing disconnected state.");
             updateUIForDisconnectedState();
             return;
         }
 
-        // Bluetooth kapalı kontrolü - SADECE UI güncelle, snackbar handleBluetoothStateChange'de
-        if (batteryData.isBluetoothDisabled()) {
-            Log.d(TAG, "📴 UI: Bluetooth disabled state");
-            updateUIForDisconnectedState();
+        if (currentBatteryData != null && batteryData.getTimestamp() < currentBatteryData.getTimestamp()) {
+            Log.w(TAG, "⚠️ Ignored stale data. Current: " + currentBatteryData.getTimestamp() + ", Received: " + batteryData.getTimestamp());
             return;
         }
 
-        // Normal bağlantı durumu kontrolü
-        if (batteryData.isDisconnected() || !batteryData.isConnected()) {
-            Log.d(TAG, "📱 UI: No Apple device connected");
-            currentBatteryData = new BatteryData();
-            updateUIForDisconnectedState();
-        } else if (batteryData.isAirPods() && batteryData.isConnected()) {
-            Log.d(TAG, "🎧 UI: Apple audio device connected");
-            currentBatteryData = batteryData;
+        // --- 2. Adım: Aktivitenin mevcut durumunu TEK SEFERDE güncelle ---
+        this.currentBatteryData = batteryData;
+
+        // --- 3. Adım: Arayüzü güncellemek için TEK BİR KARAR ver ---
+        // Cihaz bağlı VE bir Apple cihazı mı?
+        if (batteryData.isConnected() && batteryData.isAirPods()) {
+            // EVET ise: Detaylı pil arayüzünü göster.
+            Log.d(TAG, "🎧 UI: Apple device connected. Showing AirPods UI.");
             updateUIForAirPods(batteryData);
         } else {
-            Log.d(TAG, "📱 UI: Unknown state, showing disconnected");
-            currentBatteryData = new BatteryData();
+            // HAYIR ise (bağlı değil, Bluetooth kapalı, bilinmeyen cihaz vb. TÜM DİĞER DURUMLAR):
+            // "Bağlantı yok" arayüzünü göster.
+            Log.d(TAG, "🔌 UI: Not a connected Apple device. Showing disconnected state.");
             updateUIForDisconnectedState();
         }
     }
-    // StartActivityYeni.java - handleBatteryUpdate metodunu güncelleyin:
+
+
+
+
     private void updateUIForDisconnectedState() {
         Log.d(TAG, "🔌 updateUIForDisconnectedState called");
 
@@ -627,30 +567,7 @@ public class StartActivityYeni extends BaseActivity {
         Log.d(TAG, "🎧 UI updated for Apple device: " + enhancedName);
     }
 
-/*
-    private void updateUIForGenericDevice(BatteryData batteryData) {
-        // Device title
-        deviceTitle.setText(batteryData.getDeviceName());
 
-        // Device image - mevcut headphone icon kullan
-        airpodsImage.setImageResource(R.drawable.headphone); // mevcut headphone icon'unuz
-
-        // Show battery levels section
-        noConnectionSection.setVisibility(View.GONE);
-        batteryLevelsSection.setVisibility(View.VISIBLE);
-
-        // Show only left section for generic device
-        showRegularHeadphoneLayout();
-
-        // Update battery text
-        leftBatteryText.setText("Battery: " + batteryData.getSingleBattery());
-
-        // Update charging icon
-        updateChargingIcon(leftBatteryIcon, batteryData.isSingleCharging());
-
-        Log.d(TAG, "🎵 UI updated for generic device: " + batteryData.getDeviceName());
-    }
-*/
     private void showAirPodsLayout() {
         leftEarbudSection.setVisibility(View.VISIBLE);
         rightEarbudSection.setVisibility(View.VISIBLE);
@@ -771,16 +688,6 @@ public class StartActivityYeni extends BaseActivity {
 
 
 
-    /*private void checkServiceStatus() {
-        // Service çalışıyor mu kontrol et
-        isServiceRunning = isServiceRunning(UnifiedBluetoothService.class);
-        updateServiceUI(isServiceRunning);
-
-        if (isServiceRunning) {
-            // Service çalışıyorsa mevcut durumu iste
-            requestCurrentBatteryStatus();
-        }
-    }*/
     private void checkServiceStatus() {
         // Service çalışıyor mu kontrol et ama switch'i otomatik değiştirme
         isServiceRunning = isServiceRunning(UnifiedBluetoothService.class);
@@ -834,50 +741,6 @@ public class StartActivityYeni extends BaseActivity {
         }
     }
 
-    // BU ÜÇ METODU SINIFINIZIN İÇİNE (EN ALTA) EKLEYİN
-
-/*
-    private void showAboutBottomSheet() {
-        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
-        View bottomSheetView = getLayoutInflater().inflate(R.layout.bottom_sheet_about, null);
-        bottomSheetDialog.setContentView(bottomSheetView);
-
-        TextView versionText = bottomSheetView.findViewById(R.id.app_version_text);
-        com.google.android.material.button.MaterialButton shareButton = bottomSheetView.findViewById(R.id.share_app_button);
-        com.google.android.material.button.MaterialButton privacyButton = bottomSheetView.findViewById(R.id.privacy_policy_button);
-
-        // Versiyon bilgisini al ve göster
-        try {
-            String versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-            versionText.setText("Versiyon " + versionName);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // Pencere içindeki Paylaş butonunun tıklama olayı
-        shareButton.setOnClickListener(v -> {
-            Intent shareIntent = new Intent(Intent.ACTION_SEND);
-            shareIntent.setType("text/plain");
-            String shareBody = "Bu harika Bluetooth pil seviyesi uygulamasını dene!\n\n";
-            shareBody += "https://play.google.com/store/apps/details?id=" + getPackageName();
-            shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
-            shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
-            startActivity(Intent.createChooser(shareIntent, "Uygulamayı Paylaş"));
-            bottomSheetDialog.dismiss();
-        });
-
-        // Pencere içindeki Gizlilik Politikası butonunun tıklama olayı
-        privacyButton.setOnClickListener(v -> {
-            // Kendi gizlilik politikası URL'nizi buraya yapıştırın
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com"));
-            startActivity(browserIntent);
-            bottomSheetDialog.dismiss();
-        });
-
-        bottomSheetDialog.show();
-    }
-*/
-// showAboutBottomSheet metodunun yeni ve sade hali
 private void showAboutBottomSheet() {
     new AboutBottomSheetFragment().show(getSupportFragmentManager(), "AboutBottomSheet");
 }
@@ -1079,5 +942,11 @@ private void showAboutBottomSheet() {
                 }
                 break;
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart: ");
     }
 }

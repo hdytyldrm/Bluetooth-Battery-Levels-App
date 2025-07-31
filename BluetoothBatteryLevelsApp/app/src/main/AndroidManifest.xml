@@ -85,22 +85,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity
-            android:name=".activity.DenemeActivity"
-            android:enabled="true"
-            android:exported="true" />
-        <activity
-            android:name=".activity.MinimalTestActivity"
-            android:exported="true">
 
-            <!--
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-            -->
-        </activity>
 
 
         <activity
@@ -131,14 +116,8 @@
         <activity
             android:name=".splashAds.PrivacyTermsActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".notification.WebActivity"
-            android:exported="true"
-            android:launchMode="singleTask" />
-        <activity
-            android:name=".activity.HistoryActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
+
+
         <activity
             android:name=".activity.SettingActivity"
             android:exported="false"
@@ -151,17 +130,9 @@
             android:name=".activity.PairedDeviceActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.StartActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
 
-        <service
-            android:name=".service.BluetoothService"
-            android:enabled="true"
-            android:exported="true"
-            android:foregroundServiceType="mediaPlayback"
-            android:stopWithTask="false" />
+
+
         <service
             android:name=".service.UnifiedBluetoothService"
             android:enabled="true"
